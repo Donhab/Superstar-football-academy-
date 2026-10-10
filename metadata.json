@@ -1,0 +1,6 @@
+{
+  "name": "Apex Elite Football Academy",
+  "description": "Premier football academy management portal and talent trial registration system with real-time squad tracking and scout analytics.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
