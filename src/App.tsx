@@ -1,5 +1,5 @@
 /**
- * Apex Elite Football Academy - Main Application
+ * Superstar Football Academy - Main Application
  */
 
 import React, { useState, useEffect, useCallback } from 'react';
@@ -135,7 +135,7 @@ export default function App() {
                   Ready To Showcase Your Talent?
                 </h3>
                 <p className="text-xs sm:text-sm text-emerald-100/75 mt-3 max-w-xl mx-auto">
-                  Take the first step towards professional club assessment. Applications are reviewed within 48 hours by our UEFA scouting staff.
+                  Take the first step towards professional club assessment in Abuja. Applications are reviewed within 48 hours by our certified technical scouting staff.
                 </p>
                 <div className="mt-6 flex justify-center">
                   <button

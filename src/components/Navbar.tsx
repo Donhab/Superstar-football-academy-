@@ -1,6 +1,6 @@
 import React from 'react';
 import { ViewTab } from '../types';
-import { Shield, Users, UserPlus, Trophy, Database, CheckCircle2, AlertCircle } from 'lucide-react';
+import { Star, Shield, Users, UserPlus, Trophy, Database, CheckCircle2, AlertCircle } from 'lucide-react';
 
 interface NavbarProps {
   currentTab: ViewTab;
@@ -31,7 +31,7 @@ export const Navbar: React.FC<NavbarProps> = ({
           >
             <div className="relative flex items-center justify-center w-11 h-11 rounded-xl bg-gradient-to-br from-emerald-400 to-[#00F59B] p-0.5 shadow-lg shadow-emerald-900/40">
               <div className="w-full h-full bg-[#041912] rounded-[10px] flex items-center justify-center transition-colors group-hover:bg-[#06241a]">
-                <Shield className="w-6 h-6 text-[#00F59B] transition-transform group-hover:scale-110" />
+                <Star className="w-6 h-6 text-[#00F59B] fill-[#00F59B]/20 transition-transform group-hover:scale-110" />
               </div>
               <div className="absolute -top-1 -right-1 w-3 h-3 bg-[#00F59B] rounded-full animate-ping opacity-75" />
               <div className="absolute -top-1 -right-1 w-3 h-3 bg-[#00F59B] rounded-full" />
@@ -40,14 +40,14 @@ export const Navbar: React.FC<NavbarProps> = ({
             <div>
               <div className="flex items-center gap-2">
                 <span className="text-xl font-extrabold tracking-tight font-display text-white">
-                  APEX <span className="text-[#00F59B]">ELITE</span>
+                  SUPERSTAR <span className="text-[#00F59B]">FOOTBALL</span>
                 </span>
                 <span className="hidden sm:inline-block px-1.5 py-0.5 text-[10px] font-semibold tracking-wider uppercase rounded bg-emerald-950/80 border border-emerald-500/30 text-emerald-300">
                   ACADEMY
                 </span>
               </div>
               <p className="text-[11px] text-emerald-400/80 tracking-wide font-medium">
-                Premier Football Pathway &bull; UEFA Standard
+                Abuja, Nigeria &bull; NFF & Global Pathway
               </p>
             </div>
           </button>

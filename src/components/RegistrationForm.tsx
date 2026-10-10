@@ -139,7 +139,7 @@ export const RegistrationForm: React.FC<RegistrationFormProps> = ({ onSuccess, o
           Trial Registration
         </h2>
         <p className="mt-3 text-sm text-emerald-100/75">
-          Submit candidate player credentials for evaluation by the Apex Elite scouting panel. 
+          Submit candidate player credentials for evaluation by the Superstar Football Academy scouting panel. 
           Applications are logged directly to the live academy Firestore registry.
         </p>
       </div>
@@ -175,7 +175,7 @@ export const RegistrationForm: React.FC<RegistrationFormProps> = ({ onSuccess, o
                   <input
                     type="text"
                     required
-                    placeholder="e.g. Marcus Rashford"
+                    placeholder="e.g. Chidiebere Okonkwo"
                     value={fullName}
                     onChange={(e) => setFullName(e.target.value)}
                     className="w-full px-4 py-3 rounded-xl glass-input text-sm placeholder-emerald-700 font-medium"
@@ -331,7 +331,7 @@ export const RegistrationForm: React.FC<RegistrationFormProps> = ({ onSuccess, o
                 <input
                   type="tel"
                   required
-                  placeholder="+44 7700 900000"
+                  placeholder="+234 803 123 4567"
                   value={phone}
                   onChange={(e) => setPhone(e.target.value)}
                   className="w-full px-4 py-3 rounded-xl glass-input text-sm placeholder-emerald-700"
@@ -345,7 +345,7 @@ export const RegistrationForm: React.FC<RegistrationFormProps> = ({ onSuccess, o
                 <input
                   type="email"
                   required
-                  placeholder="player@talentpool.com"
+                  placeholder="player@superstar.ng"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   className="w-full px-4 py-3 rounded-xl glass-input text-sm placeholder-emerald-700"
@@ -364,7 +364,7 @@ export const RegistrationForm: React.FC<RegistrationFormProps> = ({ onSuccess, o
                   <input
                     type="text"
                     required
-                    placeholder="Contact Full Name"
+                    placeholder="Contact Full Name (e.g. Emeka Okonkwo)"
                     value={emergencyContactName}
                     onChange={(e) => setEmergencyContactName(e.target.value)}
                     className="w-full px-3 py-2.5 rounded-lg glass-input text-xs placeholder-emerald-700"
@@ -374,7 +374,7 @@ export const RegistrationForm: React.FC<RegistrationFormProps> = ({ onSuccess, o
                   <input
                     type="tel"
                     required
-                    placeholder="Contact Phone Number"
+                    placeholder="Contact Phone (+234 802 ...)"
                     value={emergencyContactPhone}
                     onChange={(e) => setEmergencyContactPhone(e.target.value)}
                     className="w-full px-3 py-2.5 rounded-lg glass-input text-xs placeholder-emerald-700"
@@ -383,7 +383,7 @@ export const RegistrationForm: React.FC<RegistrationFormProps> = ({ onSuccess, o
                 <div>
                   <input
                     type="text"
-                    placeholder="Relationship (e.g. Mother, Father, Agent)"
+                    placeholder="Relationship (e.g. Father, Mother, Guardian)"
                     value={emergencyContactRelation}
                     onChange={(e) => setEmergencyContactRelation(e.target.value)}
                     className="w-full px-3 py-2.5 rounded-lg glass-input text-xs placeholder-emerald-700"
@@ -414,7 +414,7 @@ export const RegistrationForm: React.FC<RegistrationFormProps> = ({ onSuccess, o
               <textarea
                 rows={4}
                 maxLength={500}
-                placeholder="Mention previous youth academies, representative honors, primary attributes (e.g. sprint burst, aerial dominance, set pieces, dribbling), and current club team..."
+                placeholder="Mention previous grassroots academies, state/regional honors (e.g. FCT Abuja, Lagos, Kaduna), primary attributes (e.g. sprint burst, aerial dominance, set pieces, dribbling), and current grassroots team..."
                 value={bio}
                 onChange={(e) => setBio(e.target.value)}
                 className="w-full p-4 rounded-xl glass-input text-sm placeholder-emerald-700 resize-none"
@@ -492,7 +492,7 @@ export const RegistrationForm: React.FC<RegistrationFormProps> = ({ onSuccess, o
               </div>
               <div className="flex justify-between items-center text-emerald-300">
                 <span>ASSESSMENT VENUE:</span>
-                <span className="text-white font-sans">Apex Elite Centre, Pitch A</span>
+                <span className="text-white font-sans">Superstar Pitch 1, Moshood Abiola Stadium (Package B), Abuja</span>
               </div>
             </div>
 

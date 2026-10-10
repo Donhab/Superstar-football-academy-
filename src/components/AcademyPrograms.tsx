@@ -19,7 +19,7 @@ export const AcademyPrograms: React.FC<AcademyProgramsProps> = ({ onRegisterClic
             Engineered For The Highest Level
           </h2>
           <p className="mt-4 text-emerald-100/75 text-sm sm:text-base leading-relaxed">
-            Our syllabus integrates UEFA Pro tactical methodology, sports science, and competitive showcase matches against professional reserve squads.
+            Our syllabus integrates CAF & NFF elite youth methodology, sports science, and competitive showcase fixtures against NPFL reserve squads and European touring scouts.
           </p>
         </div>
 
@@ -81,7 +81,7 @@ export const AcademyPrograms: React.FC<AcademyProgramsProps> = ({ onRegisterClic
                 U18 Elite Academy
               </h3>
               <p className="text-xs text-emerald-100/70 mt-2.5 leading-relaxed">
-                Full-time tactical immersion, GPS vest monitoring, position-specific masterclasses, and Premier League academy friendlies.
+                Full-time tactical immersion, GPS vest monitoring, position-specific masterclasses, and NPFL youth league showcases.
               </p>
 
               <ul className="mt-6 space-y-2.5 text-xs text-emerald-200/90">
@@ -91,18 +91,18 @@ export const AcademyPrograms: React.FC<AcademyProgramsProps> = ({ onRegisterClic
                 </li>
                 <li className="flex items-center gap-2">
                   <CheckCircle className="w-4 h-4 text-[#00F59B] shrink-0" />
-                  <span>Direct UEFA Pro video analysis breakdowns</span>
+                  <span>Direct tactical video analysis breakdowns</span>
                 </li>
                 <li className="flex items-center gap-2">
                   <CheckCircle className="w-4 h-4 text-[#00F59B] shrink-0" />
-                  <span>Official showcase matches vs pro academies</span>
+                  <span>Official showcase matches vs NPFL academies & scouts</span>
                 </li>
               </ul>
             </div>
 
             <div className="mt-8 pt-4 border-t border-emerald-900/40">
               <span className="text-[11px] text-[#00F59B] font-mono block mb-2">TRIAL REQUIREMENT</span>
-              <span className="text-xs text-emerald-100 font-medium">County / Academy trialist baseline</span>
+              <span className="text-xs text-emerald-100 font-medium">State youth team / Academy trialist baseline</span>
             </div>
           </div>
 
@@ -119,13 +119,13 @@ export const AcademyPrograms: React.FC<AcademyProgramsProps> = ({ onRegisterClic
                 U21 Pro Showcase Squad
               </h3>
               <p className="text-xs text-emerald-100/70 mt-2.5 leading-relaxed">
-                Targeted preparation for professional contract trials across English EFL, European leagues, and NCAA Division 1 commitments.
+                Targeted preparation for professional contract trials across Nigerian NPFL clubs, European leagues, and US collegiate athletic scholarships.
               </p>
 
               <ul className="mt-6 space-y-2.5 text-xs text-emerald-200/90">
                 <li className="flex items-center gap-2">
                   <CheckCircle className="w-4 h-4 text-[#00F59B] shrink-0" />
-                  <span>Licensed agent & scout showcase days</span>
+                  <span>FIFA / NFF licensed agent & scout showcase days</span>
                 </li>
                 <li className="flex items-center gap-2">
                   <CheckCircle className="w-4 h-4 text-[#00F59B] shrink-0" />
@@ -140,7 +140,7 @@ export const AcademyPrograms: React.FC<AcademyProgramsProps> = ({ onRegisterClic
 
             <div className="mt-8 pt-4 border-t border-emerald-900/40">
               <span className="text-[11px] text-emerald-400 font-mono block mb-2">TRIAL REQUIREMENT</span>
-              <span className="text-xs text-emerald-100 font-medium">Proven competitive youth or senior pedigree</span>
+              <span className="text-xs text-emerald-100 font-medium">Proven competitive youth or state league pedigree</span>
             </div>
           </div>
 
@@ -155,21 +155,21 @@ export const AcademyPrograms: React.FC<AcademyProgramsProps> = ({ onRegisterClic
                 UPCOMING OPEN TRIAL CALENDAR
               </div>
               <h4 className="text-xl sm:text-2xl font-bold text-white font-display">
-                London & Manchester Regional Assessments
+                Abuja FCT & Regional Talent Assessments
               </h4>
               <p className="text-xs sm:text-sm text-emerald-100/75 mt-2 max-w-xl">
                 Candidates must submit their application online through our public portal. 
-                Selected trialists will receive formal email confirmation and timing schedules.
+                Selected trialists will receive formal SMS & email confirmation with pitch entry accreditation.
               </p>
               
               <div className="mt-4 flex flex-wrap gap-4 text-xs text-emerald-200">
                 <div className="flex items-center gap-2">
                   <MapPin className="w-4 h-4 text-[#00F59B]" />
-                  <span>Apex Training Complex, St George's Park</span>
+                  <span>Moshood Abiola National Stadium (Package B), Abuja</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <Clock className="w-4 h-4 text-[#00F59B]" />
-                  <span>Morning Session: 09:30 &bull; Afternoon: 14:00</span>
+                  <span>Morning Session: 08:30 &bull; Afternoon: 15:00</span>
                 </div>
               </div>
             </div>

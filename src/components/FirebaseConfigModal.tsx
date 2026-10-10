@@ -159,7 +159,7 @@ service cloud.firestore {
                 <label className="block text-emerald-400 font-medium mb-1">Project ID</label>
                 <input
                   type="text"
-                  placeholder="apex-elite-academy"
+                  placeholder="superstar-football-academy"
                   value={config.projectId}
                   onChange={(e) => setConfig({ ...config, projectId: e.target.value })}
                   className="w-full px-3 py-2 rounded-lg glass-input font-mono text-[11px]"
@@ -170,7 +170,7 @@ service cloud.firestore {
                 <label className="block text-emerald-400 font-medium mb-1">Auth Domain</label>
                 <input
                   type="text"
-                  placeholder="apex-elite-academy.firebaseapp.com"
+                  placeholder="superstar-football-academy.firebaseapp.com"
                   value={config.authDomain}
                   onChange={(e) => setConfig({ ...config, authDomain: e.target.value })}
                   className="w-full px-3 py-2 rounded-lg glass-input font-mono text-[11px]"

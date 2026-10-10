@@ -1,5 +1,5 @@
 /**
- * Apex Elite Football Academy - Firebase Firestore Integration
+ * Superstar Football Academy - Firebase Firestore Integration
  * 
  * Supports both:
  * 1. Live Firebase Firestore (v10 SDK) when valid credentials are provided
@@ -31,15 +31,15 @@ import { SAMPLE_FOOTBALLERS } from './data/samplePlayers';
 // ============================================================================
 export const DEFAULT_FIREBASE_CONFIG: FirebaseConnectionConfig = {
   apiKey: "YOUR_FIREBASE_API_KEY",
-  authDomain: "apex-elite-academy.firebaseapp.com",
-  projectId: "apex-elite-academy",
-  storageBucket: "apex-elite-academy.appspot.com",
+  authDomain: "superstar-football-academy.firebaseapp.com",
+  projectId: "superstar-football-academy",
+  storageBucket: "superstar-football-academy.appspot.com",
   messagingSenderId: "123456789012",
   appId: "1:123456789012:web:abcdef1234567890"
 };
 
-const LOCAL_STORAGE_KEY_CONFIG = 'apex_elite_firebase_config';
-const LOCAL_STORAGE_KEY_PLAYERS = 'apex_elite_footballers_db';
+const LOCAL_STORAGE_KEY_CONFIG = 'superstar_academy_firebase_config';
+const LOCAL_STORAGE_KEY_PLAYERS = 'superstar_academy_footballers_db';
 
 // Listeners for simulated real-time local storage
 type ListenerCallback = (players: Footballer[]) => void;
@@ -233,7 +233,7 @@ export async function registerFootballer(data: Omit<Footballer, 'id' | 'createdA
   }
 
   // Local storage write
-  const id = `APX-${Math.floor(100000 + Math.random() * 900000)}`;
+  const id = `SFA-${Math.floor(100000 + Math.random() * 900000)}`;
   const localPlayer: Footballer = {
     ...payload,
     id,
@@ -307,7 +307,7 @@ export async function deleteFootballer(id: string): Promise<void> {
 export function resetSampleFootballers(): Footballer[] {
   const seeded = SAMPLE_FOOTBALLERS.map((p, idx) => ({
     ...p,
-    id: `APX-${104200 + idx}`
+    id: `SFA-${104200 + idx}`
   }));
   saveLocalFootballers(seeded);
   return seeded;

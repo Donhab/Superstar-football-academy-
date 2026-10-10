@@ -170,7 +170,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
     const encodedUri = encodeURI(csvContent);
     const link = document.createElement('a');
     link.setAttribute('href', encodedUri);
-    link.setAttribute('download', `apex_elite_squad_${new Date().toISOString().slice(0, 10)}.csv`);
+    link.setAttribute('download', `superstar_academy_squad_${new Date().toISOString().slice(0, 10)}.csv`);
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -210,7 +210,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
             </span>
           </div>
           <p className="text-xs text-emerald-300/80 mt-1">
-            Real-time talent tracking, trial assessment approvals, and squad roster registry.
+            Real-time talent tracking, Abuja trial assessment approvals, and national squad roster registry.
           </p>
         </div>
 

@@ -28,7 +28,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                onClick={onRegisterClick}>
             <span className="flex h-2 w-2 rounded-full bg-[#00F59B] animate-ping" />
             <span className="text-xs font-semibold uppercase tracking-wider text-emerald-300">
-              Autumn 2026 Showcase Trials Open
+              Abuja 2026/27 National Talent Trials Open
             </span>
             <span className="text-[11px] font-bold text-[#041912] bg-[#00F59B] px-2 py-0.5 rounded-full flex items-center gap-1 group-hover:translate-x-0.5 transition-transform">
               Apply Now <ChevronRight className="w-3 h-3" />
@@ -41,13 +41,13 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
           <h1 className="text-4xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight font-display text-white leading-[1.08] drop-shadow-sm">
             FORGE YOUR LEGACY. <br className="hidden sm:inline" />
             <span className="bg-gradient-to-r from-emerald-200 via-[#00F59B] to-teal-200 bg-clip-text text-transparent">
-              JOIN THE APEX ELITE.
+              JOIN SUPERSTAR ACADEMY.
             </span>
           </h1>
 
           <p className="mt-6 text-base sm:text-xl text-emerald-100/80 max-w-2xl mx-auto leading-relaxed font-light">
-            Europe’s premier accelerated talent academy bridging grassroots prodigies 
-            to professional trials, UEFA licensed academies, and top-tier collegiate scholarships.
+            Nigeria's premier talent academy headquartered in Abuja, bridging grassroots prodigies 
+            to NPFL professional squads, national team age grades, and international European club showcases.
           </p>
 
           {/* Action CTAs */}
@@ -113,13 +113,13 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
           <div className="flex flex-col lg:flex-row items-center justify-between gap-8">
             <div className="lg:max-w-md">
               <span className="text-xs font-bold uppercase tracking-wider text-[#00F59B] font-mono">
-                THE APEX METRIC PROTOCOL
+                THE SUPERSTAR PROTOCOL
               </span>
               <h3 className="text-2xl sm:text-3xl font-extrabold text-white font-display mt-2">
-                Evaluated by Premier League & Bundesliga Standards
+                Evaluated by CAF, NPFL & European Scouting Standards
               </h3>
               <p className="text-sm text-emerald-100/75 mt-3 leading-relaxed">
-                Every trialist at Apex Elite undergoes comprehensive physical profiling, 
+                Operating out of Moshood Abiola National Stadium Package B in Abuja, every trialist undergoes comprehensive physical profiling, 
                 high-speed video tactical analysis, Catapult GPS telemetry, and 1v1 positional mastery assessment.
               </p>
               
