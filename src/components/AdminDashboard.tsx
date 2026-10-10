@@ -209,9 +209,12 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
               {isFirebaseLive ? 'LIVE FIRESTORE' : 'SYNCED REPOSITORY'}
             </span>
           </div>
-          <p className="text-xs text-emerald-300/80 mt-1">
-            Real-time talent tracking, Abuja trial assessment approvals, and national squad roster registry.
-          </p>
+          <div className="flex items-center gap-2 mt-1">
+            <span className="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-[#042016] text-[#00F59B] border border-emerald-500/30">
+              OFFICE OF THE PRESIDENT: CHARLES UDENDE (KARIKA)
+            </span>
+            <span className="text-xs text-emerald-300/80">&bull; Abuja National Squad Registry</span>
+          </div>
         </div>
 
         <div className="flex items-center gap-2.5">

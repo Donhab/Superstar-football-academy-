@@ -26,11 +26,17 @@ export const Footer: React.FC<FooterProps> = ({ onSelectTab, onOpenFirebaseModal
               </span>
             </div>
             <p className="text-xs text-emerald-300/70 leading-relaxed">
-              Superstar Football Academy is a premier international football development institute preparing prospective collegiate and professional players for the global stage.
+              Superstar Football Academy (Abuja, Nigeria) is a premier international football development institute under the leadership of Club President <strong>Charles Udende (Karika)</strong>.
             </p>
-            <div className="flex items-center gap-2 text-[11px] font-mono text-[#00F59B]">
-              <Award className="w-4 h-4" />
-              <span>UEFA Licensed Coaching Staff</span>
+            <div className="space-y-1 text-[11px] font-mono text-[#00F59B]">
+              <div className="flex items-center gap-2">
+                <Award className="w-4 h-4" />
+                <span>President: Charles Udende (Karika)</span>
+              </div>
+              <div className="flex items-center gap-2 text-emerald-400">
+                <span>&bull;</span>
+                <span>NFF & CAF Certified Technical Staff</span>
+              </div>
             </div>
           </div>
 

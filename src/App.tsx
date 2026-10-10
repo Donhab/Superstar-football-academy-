@@ -14,6 +14,7 @@ import {
 } from './firebase';
 import { Navbar } from './components/Navbar';
 import { HeroSection } from './components/HeroSection';
+import { PresidentSection } from './components/PresidentSection';
 import { AcademyPrograms } from './components/AcademyPrograms';
 import { RegistrationForm } from './components/RegistrationForm';
 import { AdminDashboard } from './components/AdminDashboard';
@@ -119,6 +120,10 @@ export default function App() {
               onRegisterClick={() => setCurrentTab('register')}
               onAdminClick={() => setCurrentTab('admin')}
               totalRegistered={footballers.length}
+            />
+
+            <PresidentSection
+              onRegisterClick={() => setCurrentTab('register')}
             />
 
             <AcademyPrograms

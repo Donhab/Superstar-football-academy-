@@ -494,6 +494,10 @@ export const RegistrationForm: React.FC<RegistrationFormProps> = ({ onSuccess, o
                 <span>ASSESSMENT VENUE:</span>
                 <span className="text-white font-sans">Superstar Pitch 1, Moshood Abiola Stadium (Package B), Abuja</span>
               </div>
+              <div className="flex justify-between items-center text-emerald-300 border-t border-emerald-900/60 pt-2">
+                <span>ENDORSED BY:</span>
+                <span className="text-[#00F59B] font-sans font-semibold">Charles Udende (Karika) &bull; Club President</span>
+              </div>
             </div>
 
             <div className="mt-6 flex flex-col sm:flex-row items-center gap-3">
