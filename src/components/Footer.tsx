@@ -1,6 +1,7 @@
 import React from 'react';
-import { Star, Trophy, MapPin, Mail, Phone, Award } from 'lucide-react';
+import { Star, Trophy, MapPin, Mail, Phone, Award, MessageCircle } from 'lucide-react';
 import { ViewTab } from '../types';
+import { ACADEMY_INFO } from '../config/academyInfo';
 
 interface FooterProps {
   onSelectTab: (tab: ViewTab) => void;
@@ -108,13 +109,30 @@ export const Footer: React.FC<FooterProps> = ({ onSelectTab, onOpenFirebaseModal
             <div className="space-y-2">
               <div className="flex items-center gap-2">
                 <Mail className="w-3.5 h-3.5 text-[#00F59B]" />
-                <a href="mailto:trials@superstar.ng" className="hover:underline text-white font-mono">
-                  trials@superstar.ng
+                <a href={`mailto:${ACADEMY_INFO.email}`} className="hover:underline text-white font-mono">
+                  {ACADEMY_INFO.email}
                 </a>
               </div>
               <div className="flex items-center gap-2">
                 <Phone className="w-3.5 h-3.5 text-[#00F59B]" />
-                <span className="font-mono text-white">+234 (0) 9 291 4892 / +234 803 892 0000</span>
+                <a href={`tel:${ACADEMY_INFO.phonePrimary.replace(/\s+/g, '')}`} className="hover:underline font-mono text-white">
+                  {ACADEMY_INFO.phonePrimary}
+                </a>
+              </div>
+              <div className="flex items-center gap-2 text-emerald-400">
+                <Phone className="w-3.5 h-3.5 text-[#00F59B]" />
+                <span className="font-mono text-white text-[11px]">{ACADEMY_INFO.phoneSecondary} (Office)</span>
+              </div>
+              <div className="pt-1">
+                <a 
+                  href={`https://wa.me/${ACADEMY_INFO.whatsappNumber.replace(/[^0-9]/g, '')}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-emerald-950/80 border border-emerald-500/30 text-[#00F59B] hover:bg-emerald-900/60 transition text-[11px] font-mono"
+                >
+                  <MessageCircle className="w-3.5 h-3.5" />
+                  <span>WhatsApp Academy Desk</span>
+                </a>
               </div>
             </div>
           </div>

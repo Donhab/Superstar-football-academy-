@@ -1,6 +1,7 @@
 import React from 'react';
 import { ViewTab } from '../types';
-import { Star, Shield, Users, UserPlus, Trophy, Database, CheckCircle2, AlertCircle } from 'lucide-react';
+import { Star, Shield, Users, UserPlus, Trophy, Database, CheckCircle2, AlertCircle, Phone } from 'lucide-react';
+import { ACADEMY_INFO } from '../config/academyInfo';
 
 interface NavbarProps {
   currentTab: ViewTab;
@@ -111,6 +112,16 @@ export const Navbar: React.FC<NavbarProps> = ({
 
           {/* Right Action Buttons */}
           <div className="flex items-center gap-2.5">
+            {/* Direct Phone desk link */}
+            <a
+              href={`tel:${ACADEMY_INFO.phonePrimary.replace(/\s+/g, '')}`}
+              title="Call Academy Desk (Abuja)"
+              className="hidden xl:flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-mono font-medium text-emerald-200 hover:text-white glass-panel border-emerald-500/25 transition-colors"
+            >
+              <Phone className="w-3.5 h-3.5 text-[#00F59B]" />
+              <span>{ACADEMY_INFO.phonePrimary}</span>
+            </a>
+
             {/* Database status pill */}
             <button
               onClick={onOpenFirebaseModal}
