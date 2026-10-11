@@ -1,18 +1,42 @@
 import React from 'react';
 import { ViewTab } from '../types';
-import { Shield, Sparkles, ArrowRight, Activity, Award, Target, Zap, ChevronRight, Users } from 'lucide-react';
+import { 
+  Shield, 
+  Sparkles, 
+  ArrowRight, 
+  Activity, 
+  Award, 
+  Target, 
+  Zap, 
+  ChevronRight, 
+  Users, 
+  Phone, 
+  Camera, 
+  MapPin, 
+  CheckCircle2,
+  Building2 
+} from 'lucide-react';
 
 interface HeroSectionProps {
   onRegisterClick: () => void;
   onAdminClick: () => void;
   totalRegistered: number;
+  stadiumBannerUrl?: string;
+  academyPhone?: string;
+  onOpenBrandingModal?: () => void;
 }
 
 export const HeroSection: React.FC<HeroSectionProps> = ({
   onRegisterClick,
   onAdminClick,
   totalRegistered,
+  stadiumBannerUrl,
+  academyPhone = '+234 803 892 0000',
+  onOpenBrandingModal,
 }) => {
+  const defaultStadium = "https://images.unsplash.com/photo-1522778119026-d647f0596c20?auto=format&fit=crop&w=1400&q=80";
+  const displayStadium = stadiumBannerUrl || defaultStadium;
+
   return (
     <section className="relative overflow-hidden pt-8 pb-16 lg:pt-14 lg:pb-24 pitch-grid">
       {/* Background neon glows */}
@@ -22,10 +46,12 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         
-        {/* Top Announcement Pill */}
-        <div className="flex justify-center mb-6">
-          <div className="inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full glass-panel border border-[#00F59B]/30 shadow-lg shadow-emerald-950/60 group hover:border-[#00F59B]/60 transition-all cursor-pointer"
-               onClick={onRegisterClick}>
+        {/* Top Announcement & Academy Phone Bar */}
+        <div className="flex flex-col sm:flex-row items-center justify-center gap-3 mb-6">
+          <div 
+            className="inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full glass-panel border border-[#00F59B]/30 shadow-lg shadow-emerald-950/60 group hover:border-[#00F59B]/60 transition-all cursor-pointer"
+            onClick={onRegisterClick}
+          >
             <span className="flex h-2 w-2 rounded-full bg-[#00F59B] animate-ping" />
             <span className="text-xs font-semibold uppercase tracking-wider text-emerald-300">
               Abuja 2026/27 National Talent Trials Open
@@ -34,6 +60,17 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
               Apply Now <ChevronRight className="w-3 h-3" />
             </span>
           </div>
+
+          {/* Official Academy Phone Hotline Pill */}
+          <a
+            href={`tel:${academyPhone.replace(/\s+/g, '')}`}
+            className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-emerald-950/90 border border-emerald-500/40 text-xs font-mono text-emerald-200 hover:text-white hover:border-[#00F59B] transition-all shadow"
+            title="Call Superstar Football Academy Hotline"
+          >
+            <Phone className="w-3.5 h-3.5 text-[#00F59B]" />
+            <span className="text-[11px] font-semibold text-emerald-300">Hotline:</span>
+            <span className="text-white font-bold">{academyPhone}</span>
+          </a>
         </div>
 
         {/* Main Pitch Headline */}
@@ -46,7 +83,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
           </h1>
 
           <p className="mt-6 text-base sm:text-xl text-emerald-100/80 max-w-2xl mx-auto leading-relaxed font-light">
-            Nigeria's premier talent academy headquartered in Abuja, bridging grassroots prodigies 
+            Nigeria's premier talent football academy headquartered at Moshood Abiola National Stadium in Abuja, bridging grassroots prodigies 
             to NPFL professional squads, national team age grades, and international European club showcases.
           </p>
 
@@ -54,7 +91,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
           <div className="mt-9 flex flex-col sm:flex-row items-center justify-center gap-4">
             <button
               onClick={onRegisterClick}
-              className="w-full sm:w-auto px-8 py-4 rounded-xl text-base font-bold bg-[#00F59B] text-[#041912] hover:bg-[#2ffcb1] transition-all shadow-xl shadow-emerald-500/25 flex items-center justify-center gap-3 group active:scale-98"
+              className="w-full sm:w-auto px-8 py-4 rounded-xl text-base font-bold bg-[#00F59B] text-[#041912] hover:bg-[#2ffcb1] transition-all shadow-xl shadow-emerald-500/25 flex items-center justify-center gap-3 group active:scale-98 cursor-pointer"
             >
               <span>Register For Trials</span>
               <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
@@ -62,7 +99,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
 
             <button
               onClick={onAdminClick}
-              className="w-full sm:w-auto px-7 py-4 rounded-xl text-base font-semibold glass-panel text-emerald-200 hover:text-white hover:bg-emerald-950/60 hover:border-emerald-400/40 transition-all flex items-center justify-center gap-2.5 active:scale-98"
+              className="w-full sm:w-auto px-7 py-4 rounded-xl text-base font-semibold glass-panel text-emerald-200 hover:text-white hover:bg-emerald-950/60 hover:border-emerald-400/40 transition-all flex items-center justify-center gap-2.5 active:scale-98 cursor-pointer"
             >
               <Users className="w-5 h-5 text-[#00F59B]" />
               <span>Academy Dashboard</span>
@@ -108,8 +145,61 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
           </div>
         </div>
 
+        {/* IMAGE FRAME: Moshood Abiola National Stadium Showcase Card */}
+        <div className="mt-12 rounded-3xl overflow-hidden border border-emerald-500/30 shadow-2xl relative group">
+          <div className="relative h-64 sm:h-80 md:h-96 w-full overflow-hidden bg-emerald-950">
+            <img 
+              src={displayStadium} 
+              alt="Moshood Abiola National Stadium Abuja" 
+              className="w-full h-full object-cover object-center transition-transform duration-700 group-hover:scale-105"
+            />
+            {/* Gradient overlays */}
+            <div className="absolute inset-0 bg-gradient-to-t from-[#04130d] via-[#04130d]/50 to-transparent" />
+            <div className="absolute inset-0 bg-gradient-to-r from-[#04130d]/90 via-[#04130d]/40 to-transparent" />
+
+            {/* Content overlay */}
+            <div className="absolute inset-0 p-6 sm:p-10 flex flex-col justify-between">
+              <div className="flex items-center justify-between">
+                <span className="px-3.5 py-1.5 rounded-full bg-black/60 backdrop-blur-md border border-[#00F59B]/40 text-[#00F59B] text-xs font-mono font-bold flex items-center gap-2">
+                  <MapPin className="w-3.5 h-3.5" />
+                  HOME GROUND &bull; MOSHOOD ABIOLA STADIUM (PACKAGE B), ABUJA
+                </span>
+
+                {/* Upload / Change Image button for Admin */}
+                {onOpenBrandingModal && (
+                  <button
+                    onClick={onOpenBrandingModal}
+                    title="Change Stadium Banner Image Frame"
+                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-black/75 hover:bg-[#00F59B] text-white hover:text-[#041912] border border-emerald-400/50 text-xs font-bold transition shadow cursor-pointer opacity-90 group-hover:opacity-100"
+                  >
+                    <Camera className="w-3.5 h-3.5" />
+                    <span className="hidden sm:inline">Change Stadium Image</span>
+                  </button>
+                )}
+              </div>
+
+              <div className="max-w-xl">
+                <h3 className="text-2xl sm:text-4xl font-extrabold text-white font-display">
+                  Matchday & High-Performance Arena
+                </h3>
+                <p className="text-xs sm:text-sm text-emerald-100/80 mt-2 leading-relaxed">
+                  Trial assessments, full-squad tactical scrimmages, and European scout showcases take place on FIFA-standard hybrid pitches in Nigeria's capital city.
+                </p>
+                <div className="mt-4 flex flex-wrap gap-2 text-xs text-emerald-200">
+                  <span className="px-2.5 py-1 rounded-lg bg-emerald-950/80 border border-emerald-500/30">
+                    Floodlit Evening Sessions
+                  </span>
+                  <span className="px-2.5 py-1 rounded-lg bg-emerald-950/80 border border-emerald-500/30">
+                    High-Altitude Aerobic Conditioning
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
         {/* Tactical Pitch Visual Showcase Card */}
-        <div className="mt-12 glass-panel-glow rounded-3xl p-6 sm:p-8 border border-emerald-500/30 relative overflow-hidden">
+        <div className="mt-8 glass-panel-glow rounded-3xl p-6 sm:p-8 border border-emerald-500/30 relative overflow-hidden">
           <div className="flex flex-col lg:flex-row items-center justify-between gap-8">
             <div className="lg:max-w-md">
               <span className="text-xs font-bold uppercase tracking-wider text-[#00F59B] font-mono">

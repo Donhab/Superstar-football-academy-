@@ -1,11 +1,20 @@
 import React from 'react';
-import { Shield, CheckCircle, Calendar, MapPin, Users, Award, Clock, ArrowRight } from 'lucide-react';
+import { Shield, CheckCircle, Calendar, MapPin, Users, Award, Clock, ArrowRight, Camera, Building2 } from 'lucide-react';
 
 interface AcademyProgramsProps {
   onRegisterClick: () => void;
+  trainingGroundsUrl?: string;
+  onOpenBrandingModal?: () => void;
 }
 
-export const AcademyPrograms: React.FC<AcademyProgramsProps> = ({ onRegisterClick }) => {
+export const AcademyPrograms: React.FC<AcademyProgramsProps> = ({ 
+  onRegisterClick,
+  trainingGroundsUrl,
+  onOpenBrandingModal 
+}) => {
+  const defaultFacility = "https://images.unsplash.com/photo-1508098682722-e99c43a406b2?auto=format&fit=crop&w=1200&q=80";
+  const displayFacility = trainingGroundsUrl || defaultFacility;
+
   return (
     <section className="py-16 lg:py-24 border-t border-emerald-950/60 bg-[#03110b]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -13,13 +22,13 @@ export const AcademyPrograms: React.FC<AcademyProgramsProps> = ({ onRegisterClic
         {/* Section Header */}
         <div className="text-center max-w-3xl mx-auto">
           <span className="text-xs font-bold uppercase tracking-wider text-[#00F59B] font-mono">
-            PATHWAY ARCHITECTURE
+            PATHWAY ARCHITECTURE & HIGH PERFORMANCE
           </span>
           <h2 className="text-3xl sm:text-5xl font-extrabold text-white font-display mt-2">
-            Engineered For The Highest Level
+            Engineered For Elite Development
           </h2>
           <p className="mt-4 text-emerald-100/75 text-sm sm:text-base leading-relaxed">
-            Our syllabus integrates CAF & NFF elite youth methodology, sports science, and competitive showcase fixtures against NPFL reserve squads and European touring scouts.
+            Our syllabus integrates CAF & NFF youth methodology, sports science, and competitive showcase fixtures against NPFL reserve squads and international European scouts.
           </p>
         </div>
 
@@ -60,7 +69,7 @@ export const AcademyPrograms: React.FC<AcademyProgramsProps> = ({ onRegisterClic
 
             <div className="mt-8 pt-4 border-t border-emerald-900/40">
               <span className="text-[11px] text-emerald-400 font-mono block mb-2">TRIAL REQUIREMENT</span>
-              <span className="text-xs text-emerald-100 font-medium">Club / District representative experience</span>
+              <span className="text-xs text-emerald-100 font-medium">Club / District representative experience in Nigeria</span>
             </div>
           </div>
 
@@ -119,7 +128,7 @@ export const AcademyPrograms: React.FC<AcademyProgramsProps> = ({ onRegisterClic
                 U21 Pro Showcase Squad
               </h3>
               <p className="text-xs text-emerald-100/70 mt-2.5 leading-relaxed">
-                Targeted preparation for professional contract trials across Nigerian NPFL clubs, European leagues, and US collegiate athletic scholarships.
+                Targeted preparation for professional contract trials across Nigerian NPFL clubs, European leagues, and international showcases.
               </p>
 
               <ul className="mt-6 space-y-2.5 text-xs text-emerald-200/90">
@@ -146,8 +155,66 @@ export const AcademyPrograms: React.FC<AcademyProgramsProps> = ({ onRegisterClic
 
         </div>
 
+        {/* IMAGE FRAME: Training Ground & Performance Centre Image Card */}
+        <div className="mt-14 rounded-3xl overflow-hidden border border-emerald-500/30 glass-panel-glow relative group">
+          <div className="grid grid-cols-1 lg:grid-cols-12 items-center">
+            
+            {/* Visual Image Frame */}
+            <div className="lg:col-span-7 h-64 sm:h-80 relative overflow-hidden bg-emerald-950">
+              <img 
+                src={displayFacility} 
+                alt="Superstar Football Academy Training Facilities" 
+                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+              />
+              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-transparent to-[#041a12]/90 hidden lg:block" />
+              <div className="absolute inset-0 bg-gradient-to-t from-[#041a12] via-transparent to-transparent lg:hidden" />
+
+              {/* Admin Camera upload button */}
+              {onOpenBrandingModal && (
+                <button
+                  onClick={onOpenBrandingModal}
+                  title="Change Training Facility Image Frame"
+                  className="absolute top-4 left-4 flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-black/75 hover:bg-[#00F59B] text-white hover:text-[#041912] border border-emerald-400/50 text-xs font-bold transition shadow cursor-pointer opacity-90 group-hover:opacity-100"
+                >
+                  <Camera className="w-3.5 h-3.5" />
+                  <span>Change Facility Image</span>
+                </button>
+              )}
+
+              <div className="absolute bottom-3 left-3 px-2.5 py-1 rounded-lg bg-black/75 backdrop-blur-sm border border-emerald-500/30 text-[11px] font-mono text-[#00F59B]">
+                SUPERSTAR PERFORMANCE GROUNDS &bull; ABUJA
+              </div>
+            </div>
+
+            {/* Description & Specifications */}
+            <div className="lg:col-span-5 p-6 sm:p-8 space-y-4 bg-[#03150e]">
+              <span className="text-xs font-mono font-bold text-[#00F59B] uppercase tracking-wider block">
+                FACILITIES & SPORTS SCIENCE
+              </span>
+              <h3 className="text-2xl font-bold text-white font-display">
+                World-Class Infrastructure in the Capital
+              </h3>
+              <p className="text-xs sm:text-sm text-emerald-100/75 leading-relaxed">
+                Superstar Football Academy provides floodlit grass pitches, high-performance biometric gym, hydrotherapy recovery baths, and dedicated tactical video analysis suites.
+              </p>
+
+              <div className="space-y-2 pt-2 text-xs text-emerald-200">
+                <div className="flex items-center gap-2">
+                  <Building2 className="w-4 h-4 text-[#00F59B]" />
+                  <span>Package B Main & Practice Natural Turf Pitches</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Shield className="w-4 h-4 text-[#00F59B]" />
+                  <span>On-site Medical, Physiotherapy & Safeguarding Clinic</span>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
         {/* Trial Days & Schedule info */}
-        <div className="mt-14 glass-panel rounded-3xl p-6 sm:p-8 border border-emerald-500/25">
+        <div className="mt-10 glass-panel rounded-3xl p-6 sm:p-8 border border-emerald-500/25">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-center">
             <div className="md:col-span-2">
               <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-950 text-emerald-300 text-xs font-mono mb-3 border border-emerald-500/30">
@@ -177,7 +244,7 @@ export const AcademyPrograms: React.FC<AcademyProgramsProps> = ({ onRegisterClic
             <div className="flex md:justify-end">
               <button
                 onClick={onRegisterClick}
-                className="w-full md:w-auto px-6 py-3.5 rounded-xl text-sm font-bold bg-[#00F59B] text-[#041912] hover:bg-[#34f8ac] transition-all flex items-center justify-center gap-2 shadow-lg shadow-emerald-500/20"
+                className="w-full md:w-auto px-6 py-3.5 rounded-xl text-sm font-bold bg-[#00F59B] text-[#041912] hover:bg-[#34f8ac] transition-all flex items-center justify-center gap-2 shadow-lg shadow-emerald-500/20 cursor-pointer"
               >
                 <span>Register Player Now</span>
                 <ArrowRight className="w-4 h-4" />

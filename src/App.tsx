@@ -1,17 +1,20 @@
 /**
  * Superstar Football Academy - Main Application
+ * Abuja, Nigeria
  */
 
 import React, { useState, useEffect, useCallback } from 'react';
-import { ViewTab, Footballer, PlayerStatus } from './types';
+import { ViewTab, Footballer, PlayerStatus, AcademyBranding } from './types';
 import { 
   subscribeToFootballers, 
   updateFootballerStatus, 
   deleteFootballer, 
   resetSampleFootballers, 
   initializeFirebaseService,
-  isFirebaseConfigured
+  isFirebaseConfigured,
+  updateFootballerPhoto
 } from './firebase';
+import { getStoredBranding, subscribeToBranding } from './services/brandingService';
 import { Navbar } from './components/Navbar';
 import { HeroSection } from './components/HeroSection';
 import { PresidentSection } from './components/PresidentSection';
@@ -20,18 +23,22 @@ import { RegistrationForm } from './components/RegistrationForm';
 import { AdminDashboard } from './components/AdminDashboard';
 import { PlayerDossierModal } from './components/PlayerDossierModal';
 import { FirebaseConfigModal } from './components/FirebaseConfigModal';
+import { BrandingImageModal } from './components/BrandingImageModal';
 import { Footer } from './components/Footer';
 import { CheckCircle2, AlertCircle, Info, Database } from 'lucide-react';
 
 export default function App() {
   const [currentTab, setCurrentTab] = useState<ViewTab>('home');
   const [footballers, setFootballers] = useState<Footballer[]>([]);
+  const [branding, setBranding] = useState<AcademyBranding>(getStoredBranding());
   const [isFirebaseLive, setIsFirebaseLive] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
   // Active modals
   const [selectedPlayer, setSelectedPlayer] = useState<Footballer | null>(null);
   const [showFirebaseModal, setShowFirebaseModal] = useState(false);
+  const [showBrandingModal, setShowBrandingModal] = useState(false);
+  const [brandingModalTab, setBrandingModalTab] = useState<'logo' | 'president' | 'stadium' | 'facility' | 'player' | 'phone'>('logo');
 
   // Notification Toast
   const [toastMessage, setToastMessage] = useState<{ text: string; type: 'success' | 'info' | 'error' } | null>(null);
@@ -41,6 +48,14 @@ export default function App() {
     setTimeout(() => {
       setToastMessage(null);
     }, 3500);
+  }, []);
+
+  // Subscribe to branding changes
+  useEffect(() => {
+    const unsub = subscribeToBranding((updated) => {
+      setBranding(updated);
+    });
+    return () => unsub();
   }, []);
 
   // Subscribe to footballers collection
@@ -72,6 +87,24 @@ export default function App() {
     }
   };
 
+  // Update Player Photo
+  const handleUpdatePlayerPhoto = async (id: string, photoUrl: string) => {
+    try {
+      await updateFootballerPhoto(id, photoUrl);
+      showToast(photoUrl ? 'Player photo updated successfully!' : 'Player photo removed', 'success');
+      
+      // Update local state
+      setFootballers((prev) =>
+        prev.map((p) => (p.id === id ? { ...p, photoUrl } : p))
+      );
+      if (selectedPlayer && selectedPlayer.id === id) {
+        setSelectedPlayer((prev) => (prev ? { ...prev, photoUrl } : null));
+      }
+    } catch (err: any) {
+      showToast(err?.message || 'Error updating player photo', 'error');
+    }
+  };
+
   // Delete Player
   const handleDeletePlayer = async (id: string) => {
     try {
@@ -92,6 +125,11 @@ export default function App() {
     showToast('Loaded 7 sample academy footballers!', 'success');
   };
 
+  const handleOpenBrandingModal = (tab: 'logo' | 'president' | 'stadium' | 'facility' | 'player' | 'phone' = 'logo') => {
+    setBrandingModalTab(tab);
+    setShowBrandingModal(true);
+  };
+
   const pendingCount = footballers.filter((f) => f.status === 'Pending Trial').length;
 
   return (
@@ -108,6 +146,9 @@ export default function App() {
         totalCount={footballers.length}
         isFirebaseLive={isFirebaseLive}
         onOpenFirebaseModal={() => setShowFirebaseModal(true)}
+        clubLogoUrl={branding.clubLogoUrl}
+        academyPhone={branding.academyPhone}
+        onOpenBrandingModal={handleOpenBrandingModal}
       />
 
       {/* Main Content Area */}
@@ -120,35 +161,48 @@ export default function App() {
               onRegisterClick={() => setCurrentTab('register')}
               onAdminClick={() => setCurrentTab('admin')}
               totalRegistered={footballers.length}
+              stadiumBannerUrl={branding.stadiumBannerUrl}
+              academyPhone={branding.academyPhone}
+              onOpenBrandingModal={() => handleOpenBrandingModal('stadium')}
             />
 
             <PresidentSection
               onRegisterClick={() => setCurrentTab('register')}
+              presidentPhotoUrl={branding.presidentPhotoUrl}
+              onOpenBrandingModal={() => handleOpenBrandingModal('president')}
             />
 
             <AcademyPrograms
               onRegisterClick={() => setCurrentTab('register')}
+              trainingGroundsUrl={branding.trainingGroundsUrl}
+              onOpenBrandingModal={() => handleOpenBrandingModal('facility')}
             />
 
             {/* Quick Registration Teaser on Home */}
             <div className="border-t border-emerald-950/60 bg-[#020e08] py-16">
               <div className="max-w-4xl mx-auto px-4 text-center">
                 <span className="text-xs font-mono font-bold text-[#00F59B] uppercase tracking-wider">
-                  DIRECT ADMISSIONS
+                  DIRECT ADMISSIONS &bull; ABUJA HEADQUARTERS
                 </span>
                 <h3 className="text-3xl sm:text-4xl font-extrabold text-white font-display mt-2">
                   Ready To Showcase Your Talent?
                 </h3>
-                <p className="text-xs sm:text-sm text-emerald-100/75 mt-3 max-w-xl mx-auto">
-                  Take the first step towards professional club assessment in Abuja. Applications are reviewed within 48 hours by our certified technical scouting staff.
+                <p className="text-xs sm:text-sm text-emerald-100/75 mt-3 max-w-xl mx-auto leading-relaxed">
+                  Take the first step towards professional club assessment in Abuja. Applications are reviewed within 48 hours by our certified technical scouting staff under the leadership of President Charles Udende (Karika).
                 </p>
-                <div className="mt-6 flex justify-center">
+                <div className="mt-6 flex flex-wrap justify-center gap-3">
                   <button
                     onClick={() => setCurrentTab('register')}
                     className="px-8 py-4 rounded-xl text-sm font-bold bg-[#00F59B] text-[#041912] hover:bg-[#34f8ac] transition-all shadow-xl shadow-emerald-500/25 cursor-pointer"
                   >
                     Open Trial Application Form
                   </button>
+                  <a
+                    href={`tel:${(branding.academyPhone || '+234 803 892 0000').replace(/\s+/g, '')}`}
+                    className="px-6 py-4 rounded-xl text-sm font-mono font-bold glass-panel text-emerald-200 hover:text-white border-emerald-500/30 transition-all flex items-center gap-2"
+                  >
+                    <span>Call Hotline: {branding.academyPhone || '+234 803 892 0000'}</span>
+                  </a>
                 </div>
               </div>
             </div>
@@ -160,6 +214,8 @@ export default function App() {
           <div className="pt-6">
             <AcademyPrograms
               onRegisterClick={() => setCurrentTab('register')}
+              trainingGroundsUrl={branding.trainingGroundsUrl}
+              onOpenBrandingModal={() => handleOpenBrandingModal('facility')}
             />
           </div>
         )}
@@ -171,6 +227,8 @@ export default function App() {
               showToast(`Application #${newId} logged with status Pending Trial!`, 'success');
             }}
             onGoToAdmin={() => setCurrentTab('admin')}
+            clubLogoUrl={branding.clubLogoUrl}
+            academyPhone={branding.academyPhone}
           />
         )}
 
@@ -184,6 +242,10 @@ export default function App() {
             onSelectPlayer={(player) => setSelectedPlayer(player)}
             onOpenRegister={() => setCurrentTab('register')}
             onResetSampleData={handleResetSampleData}
+            onUpdatePlayerPhoto={handleUpdatePlayerPhoto}
+            onOpenBrandingModal={handleOpenBrandingModal}
+            academyPhone={branding.academyPhone}
+            presidentPhotoUrl={branding.presidentPhotoUrl}
           />
         )}
 
@@ -196,6 +258,12 @@ export default function App() {
           window.scrollTo({ top: 0, behavior: 'smooth' });
         }}
         onOpenFirebaseModal={() => setShowFirebaseModal(true)}
+        clubLogoUrl={branding.clubLogoUrl}
+        academyPhone={branding.academyPhone}
+        academySecondaryPhone={branding.academySecondaryPhone}
+        academyEmail={branding.academyEmail}
+        academyAddress={branding.academyAddress}
+        onOpenBrandingModal={() => handleOpenBrandingModal('logo')}
       />
 
       {/* MODAL: Player Scout Dossier */}
@@ -207,6 +275,7 @@ export default function App() {
           onDeleteRequest={(player) => {
             handleDeletePlayer(player.id);
           }}
+          onUpdatePhoto={handleUpdatePlayerPhoto}
         />
       )}
 
@@ -218,6 +287,20 @@ export default function App() {
             const check = initializeFirebaseService();
             setIsFirebaseLive(check.isLive);
             showToast(check.isLive ? 'Connected to live Firestore!' : 'Firebase settings updated', 'info');
+          }}
+        />
+      )}
+
+      {/* MODAL: Image, Logo & Contact Manager */}
+      {showBrandingModal && (
+        <BrandingImageModal
+          initialTab={brandingModalTab}
+          footballers={footballers}
+          onUpdatePlayerPhoto={handleUpdatePlayerPhoto}
+          onClose={() => setShowBrandingModal(false)}
+          onSaved={() => {
+            setBranding(getStoredBranding());
+            showToast('Academy image assets & settings updated!', 'success');
           }}
         />
       )}

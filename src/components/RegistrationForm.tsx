@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { PlayerPosition, PreferredFoot } from '../types';
 import { registerFootballer, calculateAge } from '../firebase';
+import { fileToOptimizedDataUrl } from '../services/brandingService';
 import confetti from 'canvas-confetti';
 import { 
   UserPlus, 
@@ -20,15 +21,25 @@ import {
   Compass,
   ShieldAlert,
   ArrowRight,
-  ExternalLink
+  ExternalLink,
+  Camera,
+  Upload,
+  Image as ImageIcon
 } from 'lucide-react';
 
 interface RegistrationFormProps {
   onSuccess: (newPlayerId: string) => void;
   onGoToAdmin: () => void;
+  clubLogoUrl?: string;
+  academyPhone?: string;
 }
 
-export const RegistrationForm: React.FC<RegistrationFormProps> = ({ onSuccess, onGoToAdmin }) => {
+export const RegistrationForm: React.FC<RegistrationFormProps> = ({ 
+  onSuccess, 
+  onGoToAdmin,
+  clubLogoUrl,
+  academyPhone = '+234 803 892 0000'
+}) => {
   // Form State
   const [fullName, setFullName] = useState('');
   const [dob, setDob] = useState('2007-05-15');
@@ -41,6 +52,10 @@ export const RegistrationForm: React.FC<RegistrationFormProps> = ({ onSuccess, o
   const [emergencyContactPhone, setEmergencyContactPhone] = useState('');
   const [emergencyContactRelation, setEmergencyContactRelation] = useState('Parent/Guardian');
   const [bio, setBio] = useState('');
+  const [photoUrl, setPhotoUrl] = useState('');
+  const [isUploadingPhoto, setIsUploadingPhoto] = useState(false);
+
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   // UI state
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -49,6 +64,22 @@ export const RegistrationForm: React.FC<RegistrationFormProps> = ({ onSuccess, o
   const [showSuccessModal, setShowSuccessModal] = useState(false);
 
   const calculatedAge = calculateAge(dob);
+
+  const handlePhotoFile = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setIsUploadingPhoto(true);
+    try {
+      const dataUrl = await fileToOptimizedDataUrl(file, 500, 500, 0.85);
+      setPhotoUrl(dataUrl);
+    } catch (err) {
+      console.error('Failed to process player photo:', err);
+    } finally {
+      setIsUploadingPhoto(false);
+      if (fileInputRef.current) fileInputRef.current.value = '';
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -89,7 +120,8 @@ export const RegistrationForm: React.FC<RegistrationFormProps> = ({ onSuccess, o
         emergencyContactPhone: emergencyContactPhone.trim(),
         emergencyContactRelation: emergencyContactRelation.trim(),
         bio: bio.trim(),
-        status: 'Pending Trial'
+        status: 'Pending Trial',
+        photoUrl: photoUrl.trim()
       });
 
       // Confetti burst
@@ -142,6 +174,17 @@ export const RegistrationForm: React.FC<RegistrationFormProps> = ({ onSuccess, o
           Submit candidate player credentials for evaluation by the Superstar Football Academy scouting panel. 
           Applications are logged directly to the live academy Firestore registry.
         </p>
+
+        {/* Admissions helpline */}
+        <div className="mt-4 flex justify-center">
+          <a
+            href={`tel:${academyPhone.replace(/\s+/g, '')}`}
+            className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-emerald-950/90 border border-emerald-500/30 text-xs font-mono text-emerald-300 hover:text-white transition shadow"
+          >
+            <Phone className="w-3.5 h-3.5 text-[#00F59B]" />
+            <span>Abuja Admissions Hotline: <strong className="text-white">{academyPhone}</strong></span>
+          </a>
+        </div>
       </div>
 
       {/* Main Glass Card Form */}
@@ -203,6 +246,62 @@ export const RegistrationForm: React.FC<RegistrationFormProps> = ({ onSuccess, o
                     onChange={(e) => setDob(e.target.value)}
                     className="w-full px-4 py-3 rounded-xl glass-input text-sm text-white"
                   />
+                </div>
+              </div>
+            </div>
+
+            {/* Player Passport Photo Frame */}
+            <div className="mt-5 p-4 rounded-2xl bg-[#041a12] border border-emerald-500/20">
+              <input
+                type="file"
+                ref={fileInputRef}
+                onChange={handlePhotoFile}
+                accept="image/*"
+                className="hidden"
+              />
+              
+              <div className="flex flex-col sm:flex-row items-center gap-4">
+                <div className="w-20 h-24 rounded-xl border-2 border-dashed border-emerald-500/40 bg-emerald-950/60 overflow-hidden relative shrink-0 flex items-center justify-center group shadow">
+                  {photoUrl ? (
+                    <img src={photoUrl} alt="Player Headshot" className="w-full h-full object-cover" />
+                  ) : (
+                    <div className="flex flex-col items-center justify-center p-2 text-center">
+                      <Camera className="w-6 h-6 text-[#00F59B]/60 mb-1" />
+                      <span className="text-[9px] font-mono text-emerald-400 leading-tight">Passport Photo</span>
+                    </div>
+                  )}
+                </div>
+
+                <div className="flex-1 text-center sm:text-left space-y-1">
+                  <div className="flex items-center gap-2 justify-center sm:justify-start">
+                    <span className="text-xs font-bold text-white font-display">Player Passport / Profile Photo</span>
+                    <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-emerald-950 border border-emerald-500/30 text-[#00F59B]">Optional</span>
+                  </div>
+                  <p className="text-[11px] text-emerald-200/70">
+                    Upload a headshot photo for the player's official digital trial dossier and scout roster card.
+                  </p>
+
+                  <div className="pt-2 flex flex-wrap gap-2 justify-center sm:justify-start">
+                    <button
+                      type="button"
+                      onClick={() => fileInputRef.current?.click()}
+                      disabled={isUploadingPhoto}
+                      className="px-3.5 py-1.5 rounded-lg text-xs font-bold bg-emerald-900/80 hover:bg-emerald-800 text-[#00F59B] border border-emerald-500/30 transition flex items-center gap-1.5 cursor-pointer"
+                    >
+                      <Upload className="w-3.5 h-3.5" />
+                      <span>{isUploadingPhoto ? 'Uploading...' : photoUrl ? 'Change Photo' : 'Upload Headshot'}</span>
+                    </button>
+
+                    {photoUrl && (
+                      <button
+                        type="button"
+                        onClick={() => setPhotoUrl('')}
+                        className="px-2.5 py-1.5 rounded-lg text-xs font-semibold glass-panel text-rose-300 hover:text-white"
+                      >
+                        Remove
+                      </button>
+                    )}
+                  </div>
                 </div>
               </div>
             </div>
@@ -493,6 +592,10 @@ export const RegistrationForm: React.FC<RegistrationFormProps> = ({ onSuccess, o
               <div className="flex justify-between items-center text-emerald-300">
                 <span>ASSESSMENT VENUE:</span>
                 <span className="text-white font-sans">Superstar Pitch 1, Moshood Abiola Stadium (Package B), Abuja</span>
+              </div>
+              <div className="flex justify-between items-center text-emerald-300">
+                <span>ACADEMY HOTLINE:</span>
+                <span className="text-[#00F59B] font-bold">{academyPhone}</span>
               </div>
               <div className="flex justify-between items-center text-emerald-300 border-t border-emerald-900/60 pt-2">
                 <span>ENDORSED BY:</span>

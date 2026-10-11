@@ -1,5 +1,6 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useRef } from 'react';
 import { Footballer, PlayerPosition, PlayerStatus } from '../types';
+import { fileToOptimizedDataUrl } from '../services/brandingService';
 import { 
   Users, 
   Search, 
@@ -19,7 +20,12 @@ import {
   Phone,
   Mail,
   ArrowUpDown,
-  FileSpreadsheet
+  FileSpreadsheet,
+  Camera,
+  Image as ImageIcon,
+  User,
+  ShieldCheck,
+  Edit2
 } from 'lucide-react';
 
 interface AdminDashboardProps {
@@ -30,6 +36,10 @@ interface AdminDashboardProps {
   onSelectPlayer: (player: Footballer) => void;
   onOpenRegister: () => void;
   onResetSampleData: () => void;
+  onUpdatePlayerPhoto?: (id: string, photoUrl: string) => Promise<void>;
+  onOpenBrandingModal?: (tab?: 'logo' | 'president' | 'stadium' | 'facility' | 'player' | 'phone') => void;
+  academyPhone?: string;
+  presidentPhotoUrl?: string;
 }
 
 export const AdminDashboard: React.FC<AdminDashboardProps> = ({
@@ -40,6 +50,10 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
   onSelectPlayer,
   onOpenRegister,
   onResetSampleData,
+  onUpdatePlayerPhoto,
+  onOpenBrandingModal,
+  academyPhone = '+234 803 892 0000',
+  presidentPhotoUrl,
 }) => {
   // Search & Filter state
   const [searchQuery, setSearchQuery] = useState('');
@@ -54,6 +68,10 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
 
   // Status updating inline tracking
   const [updatingId, setUpdatingId] = useState<string | null>(null);
+
+  // Player Photo inline file upload state
+  const [uploadingPlayerId, setUploadingPlayerId] = useState<string | null>(null);
+  const playerFileInputRef = useRef<HTMLInputElement>(null);
 
   // Summary Metrics calculations
   const totalRegistered = footballers.length;
@@ -110,6 +128,30 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
       console.error('Failed to update status:', err);
     } finally {
       setUpdatingId(null);
+    }
+  };
+
+  // Direct trigger to upload photo for a specific player
+  const triggerPlayerPhotoSelect = (playerId: string) => {
+    setUploadingPlayerId(playerId);
+    if (playerFileInputRef.current) {
+      playerFileInputRef.current.value = '';
+      playerFileInputRef.current.click();
+    }
+  };
+
+  const handlePlayerPhotoFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file || !uploadingPlayerId || !onUpdatePlayerPhoto) return;
+
+    try {
+      const dataUrl = await fileToOptimizedDataUrl(file, 600, 600, 0.88);
+      await onUpdatePlayerPhoto(uploadingPlayerId, dataUrl);
+    } catch (err) {
+      console.error('Failed to update player photo:', err);
+    } finally {
+      setUploadingPlayerId(null);
+      if (playerFileInputRef.current) playerFileInputRef.current.value = '';
     }
   };
 
@@ -194,8 +236,17 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
   return (
     <div className="py-8 lg:py-12 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       
+      {/* Hidden file input for player photo upload */}
+      <input 
+        type="file" 
+        ref={playerFileInputRef} 
+        onChange={handlePlayerPhotoFileChange} 
+        accept="image/*" 
+        className="hidden" 
+      />
+
       {/* Top Title & Actions */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
         <div>
           <div className="flex items-center gap-2.5">
             <h2 className="text-3xl font-extrabold text-white font-display">
@@ -209,7 +260,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
               {isFirebaseLive ? 'LIVE FIRESTORE' : 'SYNCED REPOSITORY'}
             </span>
           </div>
-          <div className="flex items-center gap-2 mt-1">
+          <div className="flex flex-wrap items-center gap-2 mt-1">
             <span className="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-[#042016] text-[#00F59B] border border-emerald-500/30">
               OFFICE OF THE PRESIDENT: CHARLES UDENDE (KARIKA)
             </span>
@@ -217,23 +268,108 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
           </div>
         </div>
 
-        <div className="flex items-center gap-2.5">
+        {/* Top Action Toolbar */}
+        <div className="flex flex-wrap items-center gap-2">
+          {/* Manage Images & Logos */}
+          {onOpenBrandingModal && (
+            <button
+              onClick={() => onOpenBrandingModal('logo')}
+              title="Add or update images in all frames including logos"
+              className="px-3.5 py-2 rounded-xl text-xs font-bold glass-panel text-white hover:border-[#00F59B] border-emerald-500/30 transition-all flex items-center gap-1.5 cursor-pointer"
+            >
+              <Camera className="w-4 h-4 text-[#00F59B]" />
+              <span>Images & Logos</span>
+            </button>
+          )}
+
+          {/* Edit Academy Hotline */}
+          {onOpenBrandingModal && (
+            <button
+              onClick={() => onOpenBrandingModal('phone')}
+              title="Update Official Academy Phone Number & Contacts"
+              className="px-3 py-2 rounded-xl text-xs font-mono font-semibold glass-panel text-emerald-200 hover:text-white border-emerald-500/30 transition-all flex items-center gap-1.5 cursor-pointer"
+            >
+              <Phone className="w-3.5 h-3.5 text-[#00F59B]" />
+              <span className="hidden sm:inline">{academyPhone}</span>
+              <Edit2 className="w-3 h-3 text-emerald-400" />
+            </button>
+          )}
+
           <button
             onClick={handleExportCSV}
             title="Download CSV roster"
-            className="px-3.5 py-2.5 rounded-xl text-xs font-semibold glass-panel text-emerald-200 hover:text-white hover:bg-emerald-950/60 border-emerald-500/30 transition-all flex items-center gap-1.5 cursor-pointer"
+            className="px-3 py-2 rounded-xl text-xs font-semibold glass-panel text-emerald-200 hover:text-white hover:bg-emerald-950/60 border-emerald-500/30 transition-all flex items-center gap-1.5 cursor-pointer"
           >
-            <Download className="w-4 h-4 text-[#00F59B]" />
+            <Download className="w-3.5 h-3.5 text-[#00F59B]" />
             <span className="hidden sm:inline">Export CSV</span>
           </button>
 
           <button
             onClick={onOpenRegister}
-            className="px-4 py-2.5 rounded-xl text-xs font-bold bg-[#00F59B] text-[#041912] hover:bg-[#34f8ac] transition-all flex items-center gap-1.5 shadow-lg shadow-emerald-500/20 cursor-pointer"
+            className="px-4 py-2 rounded-xl text-xs font-bold bg-[#00F59B] text-[#041912] hover:bg-[#34f8ac] transition-all flex items-center gap-1.5 shadow-lg shadow-emerald-500/20 cursor-pointer"
           >
             <UserPlus className="w-4 h-4" />
             <span>Add Trialist</span>
           </button>
+        </div>
+      </div>
+
+      {/* EXECUTIVE PRESIDENTIAL STRIP & HOTLINE BANNER */}
+      <div className="mb-8 p-4 rounded-2xl bg-gradient-to-r from-[#031d13] via-[#052b1d] to-[#031d13] border border-emerald-500/30 flex flex-col md:flex-row items-center justify-between gap-4 shadow-xl">
+        <div className="flex items-center gap-3.5">
+          {/* President Avatar with quick change camera */}
+          <div className="relative group shrink-0">
+            <div className="w-12 h-12 rounded-xl bg-gradient-to-tr from-[#00F59B] to-emerald-400 p-0.5 shadow">
+              <div className="w-full h-full rounded-[10px] bg-[#041912] overflow-hidden flex items-center justify-center">
+                {presidentPhotoUrl ? (
+                  <img src={presidentPhotoUrl} alt="Charles Udende" className="w-full h-full object-cover" />
+                ) : (
+                  <User className="w-6 h-6 text-[#00F59B]" />
+                )}
+              </div>
+            </div>
+            {onOpenBrandingModal && (
+              <button
+                onClick={() => onOpenBrandingModal('president')}
+                title="Change President's Portrait Frame"
+                className="absolute -bottom-1 -right-1 p-1 rounded-full bg-[#00F59B] text-[#041912] hover:bg-white transition shadow cursor-pointer"
+              >
+                <Camera className="w-2.5 h-2.5" />
+              </button>
+            )}
+          </div>
+
+          <div>
+            <div className="flex items-center gap-2">
+              <span className="text-sm font-bold text-white font-display">
+                Charles Udende <span className="text-[#00F59B] font-mono text-xs">(Karika)</span>
+              </span>
+              <span className="px-2 py-0.2 rounded-full bg-emerald-950 border border-emerald-500/30 text-[9px] font-mono text-[#00F59B]">
+                CLUB PRESIDENT & PATRON
+              </span>
+            </div>
+            <p className="text-[11px] text-emerald-200/75">
+              Superstar Football Academy &bull; Moshood Abiola National Stadium, Abuja, Nigeria
+            </p>
+          </div>
+        </div>
+
+        <div className="flex items-center gap-3">
+          <div className="text-right hidden sm:block">
+            <div className="text-[10px] font-mono text-emerald-400 uppercase font-semibold">ACADEMY HOTLINE</div>
+            <a href={`tel:${academyPhone.replace(/\s+/g, '')}`} className="text-xs font-mono font-bold text-white hover:text-[#00F59B]">
+              {academyPhone}
+            </a>
+          </div>
+          {onOpenBrandingModal && (
+            <button
+              onClick={() => onOpenBrandingModal('phone')}
+              className="px-3 py-1.5 rounded-lg text-xs font-semibold bg-emerald-900/60 hover:bg-emerald-800 text-emerald-200 hover:text-white border border-emerald-500/30 transition flex items-center gap-1 cursor-pointer"
+            >
+              <Edit2 className="w-3 h-3 text-[#00F59B]" />
+              <span>Edit Phone</span>
+            </button>
+          )}
         </div>
       </div>
 
@@ -258,24 +394,24 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
         </div>
 
         {/* Metric 2: Pending Trials */}
-        <div className="glass-panel p-5 rounded-2xl border-amber-500/30 bg-amber-950/10 relative overflow-hidden group hover:border-amber-400/60 transition-all">
+        <div className="glass-panel p-5 rounded-2xl border-amber-500/25 relative overflow-hidden group hover:border-amber-400/50 transition-all">
           <div className="flex items-center justify-between">
             <span className="text-xs font-mono font-semibold text-amber-300 uppercase">
               Pending Trials
             </span>
             <Clock className="w-4 h-4 text-amber-400" />
           </div>
-          <div className="text-3xl font-extrabold text-amber-200 font-display mt-2">
+          <div className="text-3xl font-extrabold text-white font-display mt-2">
             {pendingTrials}
           </div>
           <p className="text-[11px] text-amber-300/80 mt-1">
-            Awaiting coach assessment
+            Awaiting coach evaluation
           </p>
-          <div className="absolute bottom-0 left-0 right-0 h-1 bg-amber-400" />
+          <div className="absolute bottom-0 left-0 right-0 h-1 bg-amber-500" />
         </div>
 
         {/* Metric 3: Active Members */}
-        <div className="glass-panel p-5 rounded-2xl border-[#00F59B]/30 bg-emerald-950/20 relative overflow-hidden group hover:border-[#00F59B]/60 transition-all">
+        <div className="glass-panel p-5 rounded-2xl border-emerald-500/25 relative overflow-hidden group hover:border-[#00F59B]/50 transition-all">
           <div className="flex items-center justify-between">
             <span className="text-xs font-mono font-semibold text-[#00F59B] uppercase">
               Active Members
@@ -286,56 +422,48 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
             {activeMembers}
           </div>
           <p className="text-[11px] text-emerald-300/80 mt-1">
-            Contracted academy squad
+            Contracted squad roster
           </p>
           <div className="absolute bottom-0 left-0 right-0 h-1 bg-[#00F59B]" />
         </div>
 
-        {/* Metric 4: Accepted Trials */}
-        <div className="glass-panel p-5 rounded-2xl border-cyan-500/30 relative overflow-hidden group hover:border-cyan-400/60 transition-all">
+        {/* Metric 4: Accepted Trialists */}
+        <div className="glass-panel p-5 rounded-2xl border-cyan-500/25 relative overflow-hidden group hover:border-cyan-400/50 transition-all">
           <div className="flex items-center justify-between">
             <span className="text-xs font-mono font-semibold text-cyan-300 uppercase">
-              Accepted / Next Round
+              Accepted Trialists
             </span>
             <Sparkles className="w-4 h-4 text-cyan-400" />
           </div>
-          <div className="text-3xl font-extrabold text-cyan-200 font-display mt-2">
+          <div className="text-3xl font-extrabold text-white font-display mt-2">
             {acceptedCount}
           </div>
           <p className="text-[11px] text-cyan-300/80 mt-1">
-            Advanced to phase 2
+            Invited to Abuja camp
           </p>
           <div className="absolute bottom-0 left-0 right-0 h-1 bg-cyan-400" />
         </div>
 
       </div>
 
-      {/* FILTER & SEARCH CONTROLS */}
-      <div className="glass-panel p-4 sm:p-5 rounded-2xl border-emerald-500/25 mb-6 space-y-4">
-        <div className="flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-3">
+      {/* FILTER & SEARCH TOOLBAR */}
+      <div className="glass-panel rounded-2xl p-4 sm:p-5 border border-emerald-500/20 mb-6 space-y-4">
+        <div className="flex flex-col md:flex-row items-stretch md:items-center justify-between gap-4">
           
           {/* Search Box */}
           <div className="relative flex-1">
-            <Search className="w-4 h-4 text-emerald-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+            <Search className="w-4 h-4 text-emerald-400 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
             <input
               type="text"
-              placeholder="Search by player name, phone, email, notes, or position..."
+              placeholder="Search by player name, phone, email, bio or ID..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-10 pr-4 py-2.5 rounded-xl glass-input text-xs sm:text-sm placeholder-emerald-700 font-medium"
+              className="w-full pl-10 pr-4 py-2.5 rounded-xl glass-input text-xs placeholder-emerald-700"
             />
-            {searchQuery && (
-              <button
-                onClick={() => setSearchQuery('')}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-emerald-400 hover:text-white"
-              >
-                Clear
-              </button>
-            )}
           </div>
 
-          {/* Filter Dropdowns */}
-          <div className="flex flex-wrap items-center gap-2">
+          {/* Filters strip */}
+          <div className="flex flex-wrap items-center gap-2.5">
             
             {/* Status Filter */}
             <div className="flex items-center gap-1.5 bg-[#041a12] px-3 py-1.5 rounded-xl border border-emerald-500/20 text-xs">
@@ -388,7 +516,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
               <button
                 onClick={() => setViewMode('grid')}
                 title="Grid view"
-                className={`p-1.5 rounded-lg transition-colors ${
+                className={`p-1.5 rounded-lg transition-colors cursor-pointer ${
                   viewMode === 'grid' ? 'bg-[#00F59B] text-[#041912]' : 'text-emerald-400 hover:text-white'
                 }`}
               >
@@ -397,7 +525,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
               <button
                 onClick={() => setViewMode('table')}
                 title="Table view"
-                className={`p-1.5 rounded-lg transition-colors ${
+                className={`p-1.5 rounded-lg transition-colors cursor-pointer ${
                   viewMode === 'table' ? 'bg-[#00F59B] text-[#041912]' : 'text-emerald-400 hover:text-white'
                 }`}
               >
@@ -418,7 +546,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
           {footballers.length === 0 && (
             <button
               onClick={onResetSampleData}
-              className="text-[#00F59B] hover:underline font-bold flex items-center gap-1"
+              className="text-[#00F59B] hover:underline font-bold flex items-center gap-1 cursor-pointer"
             >
               <RefreshCw className="w-3 h-3" />
               Seed Demo Academy Players
@@ -442,13 +570,13 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                 setStatusFilter('All');
                 setPositionFilter('All');
               }}
-              className="px-4 py-2 rounded-xl text-xs font-semibold glass-panel text-emerald-200"
+              className="px-4 py-2 rounded-xl text-xs font-semibold glass-panel text-emerald-200 cursor-pointer"
             >
               Clear Filters
             </button>
             <button
               onClick={onResetSampleData}
-              className="px-4 py-2 rounded-xl text-xs font-bold bg-[#00F59B] text-[#041912]"
+              className="px-4 py-2 rounded-xl text-xs font-bold bg-[#00F59B] text-[#041912] cursor-pointer"
             >
               Seed Sample Academy Squad
             </button>
@@ -478,13 +606,33 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                     </span>
                   </div>
 
-                  {/* Player Identity */}
+                  {/* Player Identity with Interactive Image Frame */}
                   <div className="flex items-start gap-3">
-                    <div className="w-11 h-11 rounded-xl bg-[#042016] border border-emerald-500/30 flex items-center justify-center font-display font-extrabold text-white text-base shrink-0 group-hover:border-[#00F59B] transition-colors">
-                      {player.squadNumber || player.fullName.charAt(0)}
+                    <div className="relative group/photo shrink-0">
+                      <div className="w-12 h-12 rounded-xl bg-[#042016] border border-emerald-500/30 flex items-center justify-center font-display font-extrabold text-white text-base overflow-hidden group-hover:border-[#00F59B] transition-colors shadow">
+                        {player.photoUrl ? (
+                          <img 
+                            src={player.photoUrl} 
+                            alt={player.fullName} 
+                            className="w-full h-full object-cover" 
+                          />
+                        ) : (
+                          <span>{player.squadNumber || player.fullName.charAt(0)}</span>
+                        )}
+                      </div>
+
+                      {/* Camera upload badge for admin on player frame */}
+                      <button
+                        onClick={() => triggerPlayerPhotoSelect(player.id)}
+                        title="Upload/change player photo"
+                        className="absolute -bottom-1 -right-1 p-1 rounded-md bg-[#00F59B] text-[#041912] hover:bg-white transition opacity-70 group-hover/photo:opacity-100 shadow cursor-pointer"
+                      >
+                        <Camera className="w-2.5 h-2.5" />
+                      </button>
                     </div>
-                    <div>
-                      <h4 className="text-base font-bold text-white font-display group-hover:text-[#00F59B] transition-colors">
+
+                    <div className="flex-1 min-w-0">
+                      <h4 className="text-base font-bold text-white font-display group-hover:text-[#00F59B] transition-colors truncate">
                         {player.fullName}
                       </h4>
                       <p className="text-xs text-emerald-300/80 font-mono">
@@ -497,7 +645,9 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                   <div className="mt-4 space-y-1.5 text-xs text-emerald-200/80">
                     <div className="flex items-center gap-2 truncate">
                       <Phone className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
-                      <span className="truncate">{player.phone}</span>
+                      <a href={`tel:${player.phone.replace(/\s+/g, '')}`} className="truncate hover:underline">
+                        {player.phone}
+                      </a>
                     </div>
                     <div className="flex items-center gap-2 truncate">
                       <Mail className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
@@ -582,10 +732,31 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
               <tbody className="divide-y divide-emerald-900/30">
                 {filteredFootballers.map((player) => (
                   <tr key={player.id} className="hover:bg-emerald-950/30 transition-colors">
-                    {/* Player Name & ID */}
+                    {/* Player Name, Photo & ID */}
                     <td className="py-3 px-4">
-                      <div className="font-bold text-white">{player.fullName}</div>
-                      <div className="text-[10px] text-emerald-400 font-mono">{player.id}</div>
+                      <div className="flex items-center gap-3">
+                        <div className="relative group/tphoto shrink-0">
+                          <div className="w-9 h-9 rounded-lg bg-[#041a12] border border-emerald-500/30 overflow-hidden flex items-center justify-center font-bold text-white text-xs">
+                            {player.photoUrl ? (
+                              <img src={player.photoUrl} alt="" className="w-full h-full object-cover" />
+                            ) : (
+                              <span>{player.fullName.charAt(0)}</span>
+                            )}
+                          </div>
+                          <button
+                            onClick={() => triggerPlayerPhotoSelect(player.id)}
+                            title="Upload player photo"
+                            className="absolute -bottom-1 -right-1 p-0.5 rounded bg-[#00F59B] text-[#041912] hover:bg-white transition cursor-pointer opacity-70 group-hover/tphoto:opacity-100"
+                          >
+                            <Camera className="w-2.5 h-2.5" />
+                          </button>
+                        </div>
+
+                        <div>
+                          <div className="font-bold text-white">{player.fullName}</div>
+                          <div className="text-[10px] text-emerald-400 font-mono">{player.id}</div>
+                        </div>
+                      </div>
                     </td>
 
                     {/* Position */}
@@ -610,7 +781,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
 
                     {/* Contacts */}
                     <td className="py-3 px-4">
-                      <div className="text-emerald-200">{player.phone}</div>
+                      <div className="text-emerald-200 font-mono">{player.phone}</div>
                       <div className="text-[11px] text-emerald-400/80 truncate max-w-[150px]">{player.email}</div>
                     </td>
 
@@ -628,20 +799,20 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                       </select>
                     </td>
 
-                    {/* Action buttons */}
+                    {/* Actions */}
                     <td className="py-3 px-4 text-right">
                       <div className="flex items-center justify-end gap-1.5">
                         <button
                           onClick={() => onSelectPlayer(player)}
-                          title="View Dossier"
-                          className="p-1.5 rounded-lg glass-panel text-emerald-300 hover:text-white hover:border-[#00F59B]"
+                          title="View Scout Dossier"
+                          className="p-1.5 rounded-lg glass-panel text-emerald-300 hover:text-white hover:border-[#00F59B] cursor-pointer"
                         >
                           <Eye className="w-3.5 h-3.5" />
                         </button>
                         <button
                           onClick={() => setPlayerToDelete(player)}
                           title="Delete Record"
-                          className="p-1.5 rounded-lg bg-rose-950/40 text-rose-400 hover:text-rose-200 hover:bg-rose-900 border border-rose-500/20"
+                          className="p-1.5 rounded-lg bg-rose-950/40 text-rose-400 hover:text-rose-200 hover:bg-rose-900 border border-rose-500/20 cursor-pointer"
                         >
                           <Trash2 className="w-3.5 h-3.5" />
                         </button>
@@ -682,7 +853,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
               <button
                 type="button"
                 onClick={() => setPlayerToDelete(null)}
-                className="w-1/2 py-2.5 rounded-xl text-xs font-semibold glass-panel text-emerald-200 hover:bg-emerald-950/60"
+                className="w-1/2 py-2.5 rounded-xl text-xs font-semibold glass-panel text-emerald-200 hover:bg-emerald-950/60 cursor-pointer"
               >
                 Cancel
               </button>
@@ -691,7 +862,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                 type="button"
                 disabled={isDeleting}
                 onClick={handleConfirmDelete}
-                className="w-1/2 py-2.5 rounded-xl text-xs font-bold bg-rose-600 hover:bg-rose-500 text-white shadow-lg shadow-rose-950/60 transition-all"
+                className="w-1/2 py-2.5 rounded-xl text-xs font-bold bg-rose-600 hover:bg-rose-500 text-white shadow-lg shadow-rose-950/60 transition-all cursor-pointer"
               >
                 {isDeleting ? 'Deleting...' : 'Delete Record'}
               </button>

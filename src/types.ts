@@ -21,6 +21,19 @@ export interface Footballer {
   trialDate?: string;
   scoutNotes?: string;
   squadNumber?: number;
+  photoUrl?: string;
+}
+
+export interface AcademyBranding {
+  clubLogoUrl: string;
+  presidentPhotoUrl: string;
+  stadiumBannerUrl: string;
+  trainingGroundsUrl: string;
+  academyPhone?: string;
+  academySecondaryPhone?: string;
+  academyEmail?: string;
+  academyAddress?: string;
+  presidentName?: string;
 }
 
 export type ViewTab = 'home' | 'register' | 'programs' | 'admin';

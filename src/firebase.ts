@@ -171,7 +171,8 @@ export function subscribeToFootballers(callback: (players: Footballer[], isLive:
               createdAt: data.createdAt?.toDate ? data.createdAt.toDate().toISOString() : (data.createdAt || new Date().toISOString()),
               trialDate: data.trialDate,
               scoutNotes: data.scoutNotes,
-              squadNumber: data.squadNumber
+              squadNumber: data.squadNumber,
+              photoUrl: data.photoUrl || ''
             };
           });
           callback(players, true);
@@ -247,18 +248,14 @@ export async function registerFootballer(data: Omit<Footballer, 'id' | 'createdA
 }
 
 /**
- * Update a footballer's status ("Pending Trial", "Accepted", "Active Academy Member", "Declined")
+ * Update any footballer details including photoUrl, status, scoutNotes
  */
-export async function updateFootballerStatus(id: string, newStatus: PlayerStatus, scoutNotes?: string): Promise<void> {
+export async function updateFootballerDetails(id: string, updates: Partial<Footballer>): Promise<void> {
   const config = getStoredFirebaseConfig();
   if (isFirebaseConfigured(config) && firestoreDbInstance) {
     try {
       const docRef = doc(firestoreDbInstance, 'footballers', id);
-      const updates: any = { status: newStatus };
-      if (scoutNotes !== undefined) {
-        updates.scoutNotes = scoutNotes;
-      }
-      await updateDoc(docRef, updates);
+      await updateDoc(docRef, updates as any);
       return;
     } catch (err) {
       console.warn("Failed updating Firestore doc, updating local storage:", err);
@@ -271,13 +268,30 @@ export async function updateFootballerStatus(id: string, newStatus: PlayerStatus
     if (p.id === id) {
       return {
         ...p,
-        status: newStatus,
-        scoutNotes: scoutNotes !== undefined ? scoutNotes : p.scoutNotes
+        ...updates
       };
     }
     return p;
   });
   saveLocalFootballers(updated);
+}
+
+/**
+ * Update a footballer's photo
+ */
+export async function updateFootballerPhoto(id: string, photoUrl: string): Promise<void> {
+  return updateFootballerDetails(id, { photoUrl });
+}
+
+/**
+ * Update a footballer's status ("Pending Trial", "Accepted", "Active Academy Member", "Declined")
+ */
+export async function updateFootballerStatus(id: string, newStatus: PlayerStatus, scoutNotes?: string): Promise<void> {
+  const updates: Partial<Footballer> = { status: newStatus };
+  if (scoutNotes !== undefined) {
+    updates.scoutNotes = scoutNotes;
+  }
+  return updateFootballerDetails(id, updates);
 }
 
 /**

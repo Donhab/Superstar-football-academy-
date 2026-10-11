@@ -1,11 +1,17 @@
 import React from 'react';
-import { Star, ShieldCheck, Award, Quote, CheckCircle2, ChevronRight, User } from 'lucide-react';
+import { Star, ShieldCheck, Award, Quote, CheckCircle2, ChevronRight, User, Camera } from 'lucide-react';
 
 interface PresidentSectionProps {
   onRegisterClick: () => void;
+  presidentPhotoUrl?: string;
+  onOpenBrandingModal?: () => void;
 }
 
-export const PresidentSection: React.FC<PresidentSectionProps> = ({ onRegisterClick }) => {
+export const PresidentSection: React.FC<PresidentSectionProps> = ({ 
+  onRegisterClick, 
+  presidentPhotoUrl,
+  onOpenBrandingModal 
+}) => {
   return (
     <section className="py-16 lg:py-20 border-t border-emerald-950/70 bg-[#020e08] relative overflow-hidden">
       {/* Background glow */}
@@ -19,25 +25,47 @@ export const PresidentSection: React.FC<PresidentSectionProps> = ({ onRegisterCl
             
             {/* President Portrait / Crest Card */}
             <div className="lg:col-span-5 flex flex-col items-center text-center">
-              <div className="relative">
+              <div className="relative group">
                 {/* Glowing ring */}
-                <div className="w-48 h-48 sm:w-56 sm:h-56 rounded-3xl bg-gradient-to-tr from-[#00F59B] via-emerald-400 to-teal-500 p-1 shadow-2xl shadow-emerald-500/20">
-                  <div className="w-full h-full rounded-[22px] bg-[#041a12] flex flex-col items-center justify-center p-6 text-center relative overflow-hidden">
-                    <div className="absolute inset-0 opacity-10 bg-[radial-gradient(#00F59B_1px,transparent_1px)] [background-size:16px_16px]" />
+                <div className="w-52 h-60 sm:w-60 sm:h-72 rounded-3xl bg-gradient-to-tr from-[#00F59B] via-emerald-400 to-teal-500 p-1 shadow-2xl shadow-emerald-500/20">
+                  <div className="w-full h-full rounded-[22px] bg-[#041a12] flex flex-col items-center justify-between p-4 text-center relative overflow-hidden">
                     
-                    <div className="w-20 h-20 rounded-2xl bg-emerald-950/90 border-2 border-[#00F59B] flex items-center justify-center mb-3 shadow-lg shadow-emerald-900/50">
-                      <Star className="w-10 h-10 text-[#00F59B] fill-[#00F59B]/20" />
+                    {/* Portrait Photo Frame */}
+                    <div className="w-full h-44 sm:h-52 rounded-2xl overflow-hidden bg-emerald-950 relative border border-emerald-500/30">
+                      {presidentPhotoUrl ? (
+                        <img 
+                          src={presidentPhotoUrl} 
+                          alt="Charles Udende (Karika)" 
+                          className="w-full h-full object-cover object-top transition-transform group-hover:scale-105"
+                        />
+                      ) : (
+                        <div className="w-full h-full flex flex-col items-center justify-center bg-gradient-to-b from-[#06291d] to-[#041912]">
+                          <User className="w-16 h-16 text-[#00F59B]/60 mb-2" />
+                          <span className="text-[11px] font-mono text-emerald-300">Official Portrait</span>
+                        </div>
+                      )}
+
+                      {/* Quick upload trigger button on portrait */}
+                      {onOpenBrandingModal && (
+                        <button
+                          onClick={onOpenBrandingModal}
+                          title="Change President Portrait Image"
+                          className="absolute bottom-2 right-2 p-2 rounded-xl bg-black/75 hover:bg-[#00F59B] text-white hover:text-[#041912] border border-emerald-500/40 transition-all opacity-80 group-hover:opacity-100 shadow cursor-pointer"
+                        >
+                          <Camera className="w-4 h-4" />
+                        </button>
+                      )}
                     </div>
 
-                    <span className="text-xs font-mono font-bold text-[#00F59B] uppercase tracking-wider">
-                      CLUB PRESIDENT
-                    </span>
-                    <span className="text-xl font-extrabold text-white font-display mt-1">
-                      Charles Udende
-                    </span>
-                    <span className="text-xs font-mono text-emerald-300 font-bold bg-emerald-950/90 px-3 py-0.5 rounded-full border border-emerald-500/30 mt-1">
-                      (Karika)
-                    </span>
+                    <div className="pt-2 pb-1">
+                      <div className="text-base sm:text-lg font-extrabold text-white font-display">
+                        Charles Udende <span className="text-[#00F59B] font-mono text-xs">(Karika)</span>
+                      </div>
+                      <span className="text-[10px] font-mono text-emerald-300 font-bold uppercase tracking-wider block">
+                        Club President & Founder
+                      </span>
+                    </div>
+
                   </div>
                 </div>
 

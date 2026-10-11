@@ -16,7 +16,8 @@ export const SAMPLE_FOOTBALLERS: Omit<Footballer, 'id'>[] = [
     bio: "Top scorer in the FCT Abuja Youth Championship with 21 goals in 15 matches. Explosive burst speed (34.8 km/h), clinical box movement, and sharp aerial conversion.",
     status: "Pending Trial",
     createdAt: new Date(Date.now() - 1000 * 60 * 60 * 6).toISOString(),
-    squadNumber: 9
+    squadNumber: 9,
+    photoUrl: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=400&q=80"
   },
   {
     fullName: "Tobi Adeleke",
@@ -33,7 +34,8 @@ export const SAMPLE_FOOTBALLERS: Omit<Footballer, 'id'>[] = [
     bio: "Dynamic box-to-box playmaker from Gwarinpa, Abuja. 92% pass accuracy under press. Featured in the National U17 screening camp at Moshood Abiola Stadium.",
     status: "Active Academy Member",
     createdAt: new Date(Date.now() - 1000 * 60 * 60 * 48).toISOString(),
-    squadNumber: 8
+    squadNumber: 8,
+    photoUrl: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=400&q=80"
   },
   {
     fullName: "Mustapha Abdullahi",
@@ -50,7 +52,8 @@ export const SAMPLE_FOOTBALLERS: Omit<Footballer, 'id'>[] = [
     bio: "Towering left-footed center-back from Wuse 2, Abuja. 86% aerial duel success rate, commanding defensive leader with exceptional recovery pace and long switch passes.",
     status: "Accepted",
     createdAt: new Date(Date.now() - 1000 * 60 * 60 * 72).toISOString(),
-    squadNumber: 4
+    squadNumber: 4,
+    photoUrl: "https://images.unsplash.com/photo-1522075469751-3a6694fb2f61?auto=format&fit=crop&w=400&q=80"
   },
   {
     fullName: "Emmanuel Danjuma",
@@ -67,7 +70,8 @@ export const SAMPLE_FOOTBALLERS: Omit<Footballer, 'id'>[] = [
     bio: "Modern sweeper goalkeeper trained at Abuja National Stadium Package B. Outstanding reflex stopping and pinpoint 60-meter side-volley distribution.",
     status: "Active Academy Member",
     createdAt: new Date(Date.now() - 1000 * 60 * 60 * 96).toISOString(),
-    squadNumber: 1
+    squadNumber: 1,
+    photoUrl: "https://images.unsplash.com/photo-1492562080023-ab3db95bfbce?auto=format&fit=crop&w=400&q=80"
   },
   {
     fullName: "Chukwuebuka Eze",
@@ -84,7 +88,8 @@ export const SAMPLE_FOOTBALLERS: Omit<Footballer, 'id'>[] = [
     bio: "Electric inverted winger from Kubwa, Abuja. Rapid 1v1 dribbler with wicked left-foot curl and decisive transitional counter-attacking instinct.",
     status: "Pending Trial",
     createdAt: new Date(Date.now() - 1000 * 60 * 60 * 12).toISOString(),
-    squadNumber: 11
+    squadNumber: 11,
+    photoUrl: "https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?auto=format&fit=crop&w=400&q=80"
   },
   {
     fullName: "Victor Osasere",
@@ -101,7 +106,8 @@ export const SAMPLE_FOOTBALLERS: Omit<Footballer, 'id'>[] = [
     bio: "High-octane right wing-back with tremendous stamina (Level 22 beep test score). Solid 1v1 tackler and sharp cross delivery.",
     status: "Active Academy Member",
     createdAt: new Date(Date.now() - 1000 * 60 * 60 * 120).toISOString(),
-    squadNumber: 2
+    squadNumber: 2,
+    photoUrl: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=400&q=80"
   },
   {
     fullName: "Usman Bello",
@@ -118,6 +124,7 @@ export const SAMPLE_FOOTBALLERS: Omit<Footballer, 'id'>[] = [
     bio: "Central midfield anchor with high tactical discipline, tackling efficiency, and tempo control. Star performer in Northern States Youth Invitational.",
     status: "Pending Trial",
     createdAt: new Date(Date.now() - 1000 * 60 * 60 * 20).toISOString(),
-    squadNumber: 6
+    squadNumber: 6,
+    photoUrl: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=400&q=80"
   }
 ];

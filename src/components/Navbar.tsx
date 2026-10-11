@@ -1,6 +1,6 @@
 import React from 'react';
 import { ViewTab } from '../types';
-import { Star, Shield, Users, UserPlus, Trophy, Database, CheckCircle2, AlertCircle, Phone } from 'lucide-react';
+import { Star, Shield, Users, UserPlus, Trophy, Database, CheckCircle2, AlertCircle, Phone, Image as ImageIcon, Camera } from 'lucide-react';
 import { ACADEMY_INFO } from '../config/academyInfo';
 
 interface NavbarProps {
@@ -10,6 +10,9 @@ interface NavbarProps {
   totalCount: number;
   isFirebaseLive: boolean;
   onOpenFirebaseModal: () => void;
+  clubLogoUrl?: string;
+  academyPhone?: string;
+  onOpenBrandingModal?: (tab?: 'logo' | 'president' | 'stadium' | 'facility' | 'player' | 'phone') => void;
 }
 
 export const Navbar: React.FC<NavbarProps> = ({
@@ -19,6 +22,9 @@ export const Navbar: React.FC<NavbarProps> = ({
   totalCount,
   isFirebaseLive,
   onOpenFirebaseModal,
+  clubLogoUrl,
+  academyPhone = ACADEMY_INFO.phonePrimary,
+  onOpenBrandingModal,
 }) => {
   return (
     <header className="sticky top-0 z-40 w-full border-b border-emerald-500/20 bg-[#041510]/85 backdrop-blur-xl">
@@ -26,32 +32,55 @@ export const Navbar: React.FC<NavbarProps> = ({
         <div className="flex items-center justify-between h-20">
           
           {/* Logo & Brand */}
-          <button 
-            onClick={() => onSelectTab('home')}
-            className="flex items-center gap-3 group text-left transition-transform active:scale-95"
-          >
-            <div className="relative flex items-center justify-center w-11 h-11 rounded-xl bg-gradient-to-br from-emerald-400 to-[#00F59B] p-0.5 shadow-lg shadow-emerald-900/40">
-              <div className="w-full h-full bg-[#041912] rounded-[10px] flex items-center justify-center transition-colors group-hover:bg-[#06241a]">
-                <Star className="w-6 h-6 text-[#00F59B] fill-[#00F59B]/20 transition-transform group-hover:scale-110" />
-              </div>
-              <div className="absolute -top-1 -right-1 w-3 h-3 bg-[#00F59B] rounded-full animate-ping opacity-75" />
-              <div className="absolute -top-1 -right-1 w-3 h-3 bg-[#00F59B] rounded-full" />
-            </div>
+          <div className="flex items-center gap-2">
+            <div className="relative group">
+              <button 
+                onClick={() => onSelectTab('home')}
+                className="flex items-center gap-3 text-left transition-transform active:scale-95 cursor-pointer"
+              >
+                <div className="relative flex items-center justify-center w-11 h-11 rounded-xl bg-gradient-to-br from-emerald-400 to-[#00F59B] p-0.5 shadow-lg shadow-emerald-900/40">
+                  <div className="w-full h-full bg-[#041912] rounded-[10px] flex items-center justify-center transition-colors group-hover:bg-[#06241a] overflow-hidden">
+                    {clubLogoUrl ? (
+                      <img 
+                        src={clubLogoUrl} 
+                        alt="Superstar Academy Crest" 
+                        className="w-full h-full object-contain p-0.5" 
+                      />
+                    ) : (
+                      <Star className="w-6 h-6 text-[#00F59B] fill-[#00F59B]/20 transition-transform group-hover:scale-110" />
+                    )}
+                  </div>
+                  <div className="absolute -top-1 -right-1 w-3 h-3 bg-[#00F59B] rounded-full animate-ping opacity-75" />
+                  <div className="absolute -top-1 -right-1 w-3 h-3 bg-[#00F59B] rounded-full" />
+                </div>
 
-            <div>
-              <div className="flex items-center gap-2">
-                <span className="text-xl font-extrabold tracking-tight font-display text-white">
-                  SUPERSTAR <span className="text-[#00F59B]">FOOTBALL</span>
-                </span>
-                <span className="hidden sm:inline-block px-1.5 py-0.5 text-[10px] font-semibold tracking-wider uppercase rounded bg-emerald-950/80 border border-emerald-500/30 text-emerald-300">
-                  ACADEMY
-                </span>
-              </div>
-              <p className="text-[11px] text-emerald-400/80 tracking-wide font-medium">
-                Abuja, Nigeria &bull; NFF & Global Pathway
-              </p>
+                <div>
+                  <div className="flex items-center gap-2">
+                    <span className="text-xl font-extrabold tracking-tight font-display text-white">
+                      SUPERSTAR <span className="text-[#00F59B]">FOOTBALL</span>
+                    </span>
+                    <span className="hidden sm:inline-block px-1.5 py-0.5 text-[10px] font-semibold tracking-wider uppercase rounded bg-emerald-950/80 border border-emerald-500/30 text-emerald-300">
+                      ACADEMY
+                    </span>
+                  </div>
+                  <p className="text-[11px] text-emerald-400/80 tracking-wide font-medium">
+                    Abuja, Nigeria &bull; NFF & Global Pathway
+                  </p>
+                </div>
+              </button>
+
+              {/* Quick logo edit button for admin */}
+              {onOpenBrandingModal && (
+                <button
+                  onClick={() => onOpenBrandingModal('logo')}
+                  title="Change Club Logo Frame"
+                  className="absolute -bottom-1 left-7 p-1 rounded-md bg-[#00F59B] text-[#041912] hover:bg-white transition opacity-0 group-hover:opacity-100 shadow cursor-pointer"
+                >
+                  <Camera className="w-2.5 h-2.5" />
+                </button>
+              )}
             </div>
-          </button>
+          </div>
 
           {/* Center Navigation Links */}
           <nav className="hidden md:flex items-center gap-1 bg-[#062319]/60 p-1.5 rounded-full border border-emerald-500/20 shadow-inner">
@@ -114,13 +143,25 @@ export const Navbar: React.FC<NavbarProps> = ({
           <div className="flex items-center gap-2.5">
             {/* Direct Phone desk link */}
             <a
-              href={`tel:${ACADEMY_INFO.phonePrimary.replace(/\s+/g, '')}`}
+              href={`tel:${academyPhone.replace(/\s+/g, '')}`}
               title="Call Academy Desk (Abuja)"
               className="hidden xl:flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-mono font-medium text-emerald-200 hover:text-white glass-panel border-emerald-500/25 transition-colors"
             >
               <Phone className="w-3.5 h-3.5 text-[#00F59B]" />
-              <span>{ACADEMY_INFO.phonePrimary}</span>
+              <span>{academyPhone}</span>
             </a>
+
+            {/* Branding & Image Manager Button */}
+            {onOpenBrandingModal && (
+              <button
+                onClick={() => onOpenBrandingModal('logo')}
+                title="Change Club Logo, President Portrait & Images"
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold glass-panel text-emerald-200 hover:text-white hover:border-[#00F59B] border-emerald-500/25 transition-all cursor-pointer"
+              >
+                <ImageIcon className="w-3.5 h-3.5 text-[#00F59B]" />
+                <span className="hidden md:inline">Logos & Images</span>
+              </button>
+            )}
 
             {/* Database status pill */}
             <button

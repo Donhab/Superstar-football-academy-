@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { Footballer, PlayerStatus } from '../types';
+import { fileToOptimizedDataUrl } from '../services/brandingService';
 import { 
   X, 
   Shield, 
@@ -15,7 +16,10 @@ import {
   Award,
   Sparkles,
   Share2,
-  Trash2
+  Trash2,
+  Camera,
+  Upload,
+  User
 } from 'lucide-react';
 
 interface PlayerDossierModalProps {
@@ -23,6 +27,7 @@ interface PlayerDossierModalProps {
   onClose: () => void;
   onUpdateStatus: (id: string, newStatus: PlayerStatus, scoutNotes?: string) => Promise<void>;
   onDeleteRequest: (player: Footballer) => void;
+  onUpdatePhoto?: (id: string, photoUrl: string) => Promise<void>;
 }
 
 export const PlayerDossierModal: React.FC<PlayerDossierModalProps> = ({
@@ -30,11 +35,16 @@ export const PlayerDossierModal: React.FC<PlayerDossierModalProps> = ({
   onClose,
   onUpdateStatus,
   onDeleteRequest,
+  onUpdatePhoto,
 }) => {
   const [currentStatus, setCurrentStatus] = useState<PlayerStatus>(player.status);
   const [notes, setNotes] = useState(player.scoutNotes || '');
+  const [playerPhoto, setPlayerPhoto] = useState(player.photoUrl || '');
   const [isSavingNotes, setIsSavingNotes] = useState(false);
+  const [isUploadingPhoto, setIsUploadingPhoto] = useState(false);
   const [notesSavedToast, setNotesSavedToast] = useState(false);
+
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleStatusChange = async (e: React.ChangeEvent<HTMLSelectElement>) => {
     const val = e.target.value as PlayerStatus;
@@ -48,6 +58,25 @@ export const PlayerDossierModal: React.FC<PlayerDossierModalProps> = ({
     setIsSavingNotes(false);
     setNotesSavedToast(true);
     setTimeout(() => setNotesSavedToast(false), 2500);
+  };
+
+  const handlePhotoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setIsUploadingPhoto(true);
+    try {
+      const dataUrl = await fileToOptimizedDataUrl(file, 500, 500, 0.85);
+      setPlayerPhoto(dataUrl);
+      if (onUpdatePhoto) {
+        await onUpdatePhoto(player.id, dataUrl);
+      }
+    } catch (err) {
+      console.error('Failed to update photo:', err);
+    } finally {
+      setIsUploadingPhoto(false);
+      if (fileInputRef.current) fileInputRef.current.value = '';
+    }
   };
 
   const getStatusBadge = (status: PlayerStatus) => {
@@ -69,14 +98,61 @@ export const PlayerDossierModal: React.FC<PlayerDossierModalProps> = ({
     <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/80 backdrop-blur-md animate-in fade-in duration-200">
       <div className="glass-panel-glow max-w-2xl w-full rounded-3xl border border-emerald-500/40 overflow-hidden shadow-2xl max-h-[90vh] flex flex-col">
         
+        {/* Hidden File Input for Player Photo */}
+        <input 
+          type="file" 
+          ref={fileInputRef} 
+          onChange={handlePhotoUpload} 
+          accept="image/*" 
+          className="hidden" 
+        />
+
         {/* Header Banner */}
         <div className="relative bg-gradient-to-r from-[#042016] via-[#063323] to-[#042016] p-6 border-b border-emerald-500/20 flex items-start justify-between">
           <div className="flex items-center gap-4">
-            <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-emerald-400 to-[#00F59B] p-0.5 shadow-lg">
-              <div className="w-full h-full bg-[#041912] rounded-[14px] flex items-center justify-center">
-                <span className="font-display font-black text-2xl text-[#00F59B]">
-                  {player.squadNumber || player.fullName.charAt(0)}
-                </span>
+            {/* Player Image Frame */}
+            <div className="relative group">
+              <div className="w-18 h-18 sm:w-20 sm:h-20 rounded-2xl bg-gradient-to-br from-emerald-400 to-[#00F59B] p-0.5 shadow-lg overflow-hidden shrink-0">
+                <div className="w-full h-full bg-[#041912] rounded-[14px] flex items-center justify-center overflow-hidden">
+                  {playerPhoto ? (
+                    <img 
+                      src={playerPhoto} 
+                      alt={player.fullName} 
+                      className="w-full h-full object-cover" 
+                    />
+                  ) : (
+                    <span className="font-display font-black text-2xl text-[#00F59B]">
+                      {player.squadNumber || player.fullName.charAt(0)}
+                    </span>
+                  )}
+                </div>
+              </div>
+
+              {/* Upload badge on player photo */}
+              <div className="absolute -bottom-1 -right-1 flex gap-1">
+                <button
+                  type="button"
+                  onClick={() => fileInputRef.current?.click()}
+                  title="Change or upload player photo"
+                  className="p-1.5 rounded-lg bg-[#00F59B] text-[#041912] hover:bg-white transition shadow cursor-pointer"
+                >
+                  <Camera className="w-3.5 h-3.5" />
+                </button>
+                {playerPhoto && (
+                  <button
+                    type="button"
+                    onClick={async () => {
+                      setPlayerPhoto('');
+                      if (onUpdatePhoto) {
+                        await onUpdatePhoto(player.id, '');
+                      }
+                    }}
+                    title="Remove player photo"
+                    className="p-1.5 rounded-lg bg-rose-900/80 text-rose-200 hover:bg-rose-800 transition shadow cursor-pointer"
+                  >
+                    <Trash2 className="w-3.5 h-3.5" />
+                  </button>
+                )}
               </div>
             </div>
 
@@ -92,6 +168,9 @@ export const PlayerDossierModal: React.FC<PlayerDossierModalProps> = ({
               <p className="text-xs text-emerald-300/80 font-mono mt-1">
                 REF: {player.id} &bull; Registered {new Date(player.createdAt).toLocaleDateString()}
               </p>
+              {isUploadingPhoto && (
+                <span className="text-[11px] text-[#00F59B] font-mono animate-pulse">Uploading photo...</span>
+              )}
             </div>
           </div>
 
